@@ -1,0 +1,12 @@
+language: scala
+
+jdk:
+  - oraclejdk8
+
+scala:
+  - 2.11.8
+
+notifications:
+  email:
+    recipients:
+      - mide.ojikutu@gmail.com
