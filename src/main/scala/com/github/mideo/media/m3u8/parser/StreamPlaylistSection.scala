@@ -39,7 +39,7 @@ object StreamPlaylistSection {
     val BANDWIDTH = "BANDWIDTH"
     val CODECS = "CODECS"
     val RESOLUTION = "RESOLUTION"
-    val CLOSE_CAPTIONS = "CLOSE-CAPTIONS"
+    val CLOSED_CAPTIONS = "CLOSED-CAPTIONS"
     val AUDIO = "AUDIO"
 
   }

@@ -4,14 +4,14 @@ private[media] object StreamTransformer {
   private def _splatMap(s: String): Map[String, String] = {
     val listData = s.split(":")
     if (listData.length > 1) {
-      return listData.tail.head.replace("\n", ",").split(",")
+      return listData.tail.head.split(",")
         .map(text => text.split("="))
         .map(list =>
-          if (list.length > 1) list.head -> list.tail.head
-          else "XARGS" -> list.head
+          if (list.length > 1) list.head -> list.tail.head.replace("\"", "").replace("\n", "")
+          else "XARGS" -> list.head.replace("\"", "").replace("\n", "")
         ).toMap
     }
-    Map("XARGS" -> listData.head.replace("\n", ""))
+    Map("XARGS" -> listData.head.replace("\n", "").replace("\"", ""))
   }
 
   private def buildMediaStreamPlaylist(mappings: Array[MediaStreamPlaylistParts]): StreamPlaylist = {
@@ -58,21 +58,21 @@ private[media] object StreamTransformer {
       case line: String if StreamPlaylistSection.MediaStreamInfo.isSectionType(line) =>
         val data = _splatMap(line)
         MediaStreamInfo(
-          StreamPlaylistSection.MediaStreamInfo.BANDWIDTH,
-          StreamPlaylistSection.MediaStreamInfo.CODECS.split(",").toList,
-          StreamPlaylistSection.MediaStreamInfo.RESOLUTION,
-          StreamPlaylistSection.MediaStreamInfo.CLOSE_CAPTIONS,
-          StreamPlaylistSection.MediaStreamInfo.AUDIO,
-          StreamPlaylistSection.MediaStreamInfo.XARGS)
+          data(StreamPlaylistSection.MediaStreamInfo.BANDWIDTH),
+          data(StreamPlaylistSection.MediaStreamInfo.CODECS).split(",").toList,
+          data(StreamPlaylistSection.MediaStreamInfo.RESOLUTION),
+          data(StreamPlaylistSection.MediaStreamInfo.CLOSED_CAPTIONS),
+          data(StreamPlaylistSection.MediaStreamInfo.AUDIO),
+          data(StreamPlaylistSection.MediaStreamInfo.XARGS))
       case line: String if StreamPlaylistSection.MediaStreamTypeInfo.isSectionType(line) =>
         val data = _splatMap(line)
         MediaStreamTypeInfo(
-            StreamPlaylistSection.MediaStreamTypeInfo.TYPE,
-            StreamPlaylistSection.MediaStreamTypeInfo.GROUP_ID,
-            StreamPlaylistSection.MediaStreamTypeInfo.LANGUAGE,
-            StreamPlaylistSection.MediaStreamTypeInfo.NAME,
-            StreamPlaylistSection.MediaStreamTypeInfo.AUTOSELECT,
-            StreamPlaylistSection.MediaStreamTypeInfo.DEFAULT)
+          data(StreamPlaylistSection.MediaStreamTypeInfo.TYPE),
+          data(StreamPlaylistSection.MediaStreamTypeInfo.GROUP_ID),
+          data(StreamPlaylistSection.MediaStreamTypeInfo.LANGUAGE),
+          data(StreamPlaylistSection.MediaStreamTypeInfo.NAME),
+          data(StreamPlaylistSection.MediaStreamTypeInfo.AUTOSELECT),
+          data(StreamPlaylistSection.MediaStreamTypeInfo.DEFAULT))
       case _ => None
     } filter { x => x != None } map {
       _.asInstanceOf[MediaStreamPlaylistParts]

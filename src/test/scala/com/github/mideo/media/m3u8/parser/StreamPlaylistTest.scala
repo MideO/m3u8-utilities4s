@@ -14,6 +14,9 @@ class StreamPlaylistTest extends M3U8PerserSuite {
     val streamPlaylist = StreamPlaylist(data)
 
     streamPlaylist.mediaStreamType.name should be("EXTM3U")
+    streamPlaylist.mediaStreamTypeInfo.name should be("English")
+    streamPlaylist.mediaStreamInfo.isEmpty should be(false)
+    streamPlaylist.mediaStreamFrameInfo.isEmpty should be(false)
   }
 
 
