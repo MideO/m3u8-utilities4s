@@ -2,3 +2,5 @@
 *.log
 target
 .DS_Store
+.idea
+
