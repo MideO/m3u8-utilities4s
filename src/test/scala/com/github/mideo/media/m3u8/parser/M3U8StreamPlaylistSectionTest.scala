@@ -1,6 +1,6 @@
 package com.github.mideo.media.m3u8.parser
 
-class StreamPlaylistSectionTest extends M3U8PerserSuite {
+class M3U8StreamPlaylistSectionTest extends M3U8ParserSuite {
 
 
   test("MediaStreamType testIsSectionType match") {

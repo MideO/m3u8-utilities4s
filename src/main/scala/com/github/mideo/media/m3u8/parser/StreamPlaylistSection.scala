@@ -16,6 +16,10 @@ object StreamPlaylistSection {
     }
   }
 
+  object MediaStreamIndependentSegments extends MediaStreamPlaylistSection {
+    override val identifier: String = "EXT-X-INDEPENDENT-SEGMENTS"
+  }
+
   object MediaStreamType extends MediaStreamPlaylistSection {
     override def isSectionType(string: String): Boolean = {
       string.toLowerCase.startsWith(identifier.toLowerCase) && !string.contains("-")
