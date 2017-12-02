@@ -5,7 +5,7 @@ import scala.io.Source
 
 class StreamPlaylistTest extends M3U8ParserSuite {
 
-  test("StreamPlaylist") {
+  test("test StreamPlaylist") {
     //Given
     val is =   getClass.getClassLoader.getResource("master.m3u8").openStream()
 
@@ -21,7 +21,7 @@ class StreamPlaylistTest extends M3U8ParserSuite {
     streamPlaylist.mediaStreamFrameInfo.isInstanceOf[Map[String, MediaStreamFrameInfo]] should be(true)
   }
 
-  test("write") {
+  test("test write") {
     //Given
     val is =   getClass.getClassLoader.getResource("master.m3u8").openStream()
 
@@ -35,7 +35,7 @@ class StreamPlaylistTest extends M3U8ParserSuite {
 
   }
 
-  test("builder") {
+  test("test builders") {
     //Given
     val is =   getClass.getClassLoader.getResource("master.m3u8").openStream()
 
