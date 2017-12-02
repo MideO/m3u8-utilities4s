@@ -6,7 +6,7 @@ trait StreamPlaylist {
   val mediaStreamInfo: Map[String, MediaStreamInfo]
   val mediaStreamFrameInfo: Map[String, MediaStreamFrameInfo]
 
-  def write:String
+  def write: String
 
 }
 
@@ -18,12 +18,47 @@ object M3U8MasterStreamPlaylist {
 
 
 case class M3U8MasterStreamPlaylist(mediaStreamType: MediaStreamType,
-                                    mediaStreamIndependentSegments:MediaStreamIndependentSegments,
+                                    mediaStreamIndependentSegments: MediaStreamIndependentSegments,
                                     mediaStreamTypeInfo: MediaStreamTypeInfo,
                                     mediaStreamInfo: Map[String, MediaStreamInfo],
-                                    mediaStreamFrameInfo: Map[String, MediaStreamFrameInfo]) extends StreamPlaylist{
+                                    mediaStreamFrameInfo: Map[String, MediaStreamFrameInfo]) extends StreamPlaylist {
 
   override def write: String = StreamTransformer.serialize(this)
 
+  def withMediaStreamType(m: MediaStreamType): M3U8MasterStreamPlaylist = {
+    new M3U8MasterStreamPlaylist(
+      m,
+      mediaStreamIndependentSegments,
+      mediaStreamTypeInfo,
+      mediaStreamInfo,
+      mediaStreamFrameInfo)
+  }
+
+  def withMediaStreamTypeInfo(m: MediaStreamTypeInfo): M3U8MasterStreamPlaylist = {
+    new M3U8MasterStreamPlaylist(
+      mediaStreamType,
+      mediaStreamIndependentSegments,
+      m,
+      mediaStreamInfo,
+      mediaStreamFrameInfo)
+  }
+
+  def withMediaStreamInfo(m: Map[String, MediaStreamInfo]): M3U8MasterStreamPlaylist = {
+    new M3U8MasterStreamPlaylist(
+      mediaStreamType,
+      mediaStreamIndependentSegments,
+      mediaStreamTypeInfo,
+      m,
+      mediaStreamFrameInfo)
+  }
+
+  def withMediaStreamFrameInfo(m:Map[String, MediaStreamFrameInfo]): M3U8MasterStreamPlaylist= {
+    new M3U8MasterStreamPlaylist(
+      mediaStreamType,
+      mediaStreamIndependentSegments,
+      mediaStreamTypeInfo,
+      mediaStreamInfo,
+      m)
+  }
 
 }

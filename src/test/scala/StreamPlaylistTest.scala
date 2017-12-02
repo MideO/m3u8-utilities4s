@@ -35,6 +35,28 @@ class StreamPlaylistTest extends M3U8ParserSuite {
 
   }
 
+  test("builder") {
+    //Given
+    val is =   getClass.getClassLoader.getResource("master.m3u8").openStream()
+
+    val data:String = Source.fromInputStream(is).getLines().fold(""){(a, b) => s"$a\n$b"}
+
+
+    //When
+    val streamPlaylist = M3U8MasterStreamPlaylist(data)
+      .withMediaStreamType(MediaStreamType("foobar"))
+      .withMediaStreamTypeInfo(MediaStreamTypeInfo("acb","sss","fff","fff","ssds","sdfffggg"))
+      .withMediaStreamInfo(Map("1111" -> MediaStreamInfo("1111", List("sdsd"), "sds", "sdsd", "gggg", "mdkdfk")))
+      .withMediaStreamFrameInfo(Map("2222" -> MediaStreamFrameInfo("2222", List("sdsd"), "sds", "sdsd")))
+
+    //Then
+    streamPlaylist.mediaStreamType.name should be("foobar")
+    streamPlaylist.mediaStreamTypeInfo.mediaType should be("acb")
+    streamPlaylist.mediaStreamInfo("1111").bandWith should be("1111")
+    streamPlaylist.mediaStreamFrameInfo("2222").bandWith should be("2222")
+
+  }
+
 
 
 }
