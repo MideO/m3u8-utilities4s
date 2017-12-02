@@ -6,7 +6,7 @@ class StreamTransformerTest extends M3U8ParserSuite {
 
   test("testDeserialize") {
     //Given
-    val is =   getClass.getClassLoader.getResource("no_drm.m3u8").openStream()
+    val is =   getClass.getClassLoader.getResource("master.m3u8").openStream()
 
     val data:String = Source.fromInputStream(is).getLines().fold(""){(a, b) => s"$a\n$b"}
 
@@ -23,7 +23,7 @@ class StreamTransformerTest extends M3U8ParserSuite {
 
   test("testSerialize") {
     //Given
-    val is =   getClass.getClassLoader.getResource("no_drm.m3u8").openStream()
+    val is =   getClass.getClassLoader.getResource("master.m3u8").openStream()
 
     val data:String = Source.fromInputStream(is).getLines().fold(""){(a, b) => s"$a\n$b"}
 

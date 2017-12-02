@@ -1,4 +1,5 @@
-package com.github.mideo.media.m3u8.parser
+import com.github.mideo.media.m3u8.parser._
+
 import scala.io.Source
 
 
@@ -6,7 +7,7 @@ class StreamPlaylistTest extends M3U8ParserSuite {
 
   test("StreamPlaylist") {
     //Given
-    val is =   getClass.getClassLoader.getResource("no_drm.m3u8").openStream()
+    val is =   getClass.getClassLoader.getResource("master.m3u8").openStream()
 
     val data:String = Source.fromInputStream(is).getLines().fold(""){(a, b) => s"$a\n$b"}
 
@@ -22,7 +23,7 @@ class StreamPlaylistTest extends M3U8ParserSuite {
 
   test("write") {
     //Given
-    val is =   getClass.getClassLoader.getResource("no_drm.m3u8").openStream()
+    val is =   getClass.getClassLoader.getResource("master.m3u8").openStream()
 
     val data:String = Source.fromInputStream(is).getLines().fold(""){(a, b) => s"$a\n$b"}
 
