@@ -2,7 +2,7 @@ package com.github.mideo.media.m3u8.parser
 import scala.io.Source
 
 
-class M3U8StreamPlaylistTest extends M3U8ParserSuite {
+class StreamPlaylistTest extends M3U8ParserSuite {
 
   test("StreamPlaylist") {
     //Given
@@ -11,7 +11,7 @@ class M3U8StreamPlaylistTest extends M3U8ParserSuite {
     val data:String = Source.fromInputStream(is).getLines().fold(""){(a, b) => s"$a\n$b"}
 
     //When
-    val streamPlaylist = M3U8StreamPlaylist(data)
+    val streamPlaylist = M3U8MasterStreamPlaylist(data)
 
 
     streamPlaylist.mediaStreamType.isInstanceOf[MediaStreamType] should be(true)
@@ -27,7 +27,7 @@ class M3U8StreamPlaylistTest extends M3U8ParserSuite {
     val data:String = Source.fromInputStream(is).getLines().fold(""){(a, b) => s"$a\n$b"}
 
     //When
-    val streamPlaylist = M3U8StreamPlaylist(data)
+    val streamPlaylist = M3U8MasterStreamPlaylist(data)
 
     //Then
     streamPlaylist.write.isInstanceOf[String] should be(true)

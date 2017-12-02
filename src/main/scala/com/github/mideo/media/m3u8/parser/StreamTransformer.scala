@@ -6,9 +6,9 @@ private[media] object StreamTransformer {
   import Serializer._
   import Deserializer._
 
-  val deserialize: String => M3U8StreamPlaylist = mapData _ andThen buildMediaStreamPlaylist
+  val deserialize: String => M3U8MasterStreamPlaylist = mapData _ andThen buildMediaStreamPlaylist
 
-  val serialize: M3U8StreamPlaylist => String = stringifyPlaylist _ andThen fold
+  val serialize: M3U8MasterStreamPlaylist => String = stringifyPlaylist _ andThen fold
 }
 
 
@@ -32,7 +32,7 @@ private object Deserializer {
     Map("XARGS" -> listData.head.replace("\n", "").replace("\"", ""))
   }
 
-  def buildMediaStreamPlaylist(mappings: Array[MediaStreamPlaylistParts]): M3U8StreamPlaylist = {
+  def buildMediaStreamPlaylist(mappings: Array[MediaStreamPlaylistParts]): M3U8MasterStreamPlaylist = {
     val mediaStreamType = mappings.filter {
       _.isInstanceOf[MediaStreamType]
     }.head.asInstanceOf[MediaStreamType]
@@ -61,7 +61,7 @@ private object Deserializer {
       }
     } toMap
 
-    M3U8StreamPlaylist(mediaStreamType, mediaStreamIndependentSegments, mediaStreamTypeInfo, mediaStreamInfo, mediaStreamFrameInfo)
+    M3U8MasterStreamPlaylist(mediaStreamType, mediaStreamIndependentSegments, mediaStreamTypeInfo, mediaStreamInfo, mediaStreamFrameInfo)
 
   }
 
@@ -112,7 +112,7 @@ private object Serializer {
     playListPartsString.fold(""){(a, b) => s"$a\n$b"}
   }
 
-  def stringifyPlaylist(m3U8StreamPlaylist: M3U8StreamPlaylist): List[String] = {
+  def stringifyPlaylist(m3U8StreamPlaylist: M3U8MasterStreamPlaylist): List[String] = {
     val arr = mutable.ArrayBuffer.empty[String]
     List(m3U8StreamPlaylist.mediaStreamType.toString,
       m3U8StreamPlaylist.mediaStreamIndependentSegments,
