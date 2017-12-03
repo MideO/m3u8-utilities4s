@@ -78,12 +78,13 @@ val updated: M3U8MasterStreamPlaylist = streamPlaylist
 //serialise
 val newContent = updated.serialize
 
+//or saveToFile
+
+updated.saveToFile("master2.m3u8")
 
 ```
-serializing will produce update data below 
+serializing will `master2.m3u8` produce update data below 
 ```
-
-
 #EXTM3U
 #EXT-X-INDEPENDENT-SEGMENTS
 #EXT-X-MEDIA:TYPE=AUDIO,GROUP-ID="aac",LANGUAGE="fre",NAME="French",AUTOSELECT=YES,DEFAULT=YES
