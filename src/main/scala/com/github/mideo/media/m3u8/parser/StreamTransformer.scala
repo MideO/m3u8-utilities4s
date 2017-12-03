@@ -3,6 +3,7 @@ package com.github.mideo.media.m3u8.parser
 import scala.collection.mutable
 
 private[media] object StreamTransformer {
+
   import Serializer._
   import Deserializer._
 
@@ -17,8 +18,9 @@ private object Deserializer {
     val listData = s.split(":")
     if (listData.length > 1) {
       val splat = {
-        if (listData.tail.head.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)|\n").length > 1)
-          {listData.tail.head.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)|\n")}
+        if (listData.tail.head.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)|\n").length > 1) {
+          listData.tail.head.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)|\n")
+        }
         else listData.tail.head.split(",")
       }
 
@@ -119,7 +121,7 @@ private object Serializer {
       m3U8StreamPlaylist.mediaStreamTypeInfo.toString,
       m3U8StreamPlaylist.mediaStreamInfo,
       m3U8StreamPlaylist.mediaStreamFrameInfo) foreach {
-      case value: Map[String, _] => arr ++= value.values.toList map (_.toString)
+      case value: Map[_,_] => arr ++= value.values.toList map (_.toString)
       case x => arr += x.toString
     }
     arr.toList
