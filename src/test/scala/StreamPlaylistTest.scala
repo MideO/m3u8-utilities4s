@@ -43,16 +43,25 @@ class StreamPlaylistTest extends M3U8ParserSuite {
 
 
     //When
-    val streamPlaylist = M3U8MasterStreamPlaylist(data)
+    val pl = M3U8MasterStreamPlaylist(data)
+
+    val streamPlaylist = pl
       .withMediaStreamType(MediaStreamType("foobar"))
-      .withMediaStreamTypeInfo(MediaStreamTypeInfo("acb","sss","fff","fff","ssds","sdfffggg"))
-      .withMediaStreamInfo(Map("1111" -> MediaStreamInfo("1111", List("sdsd"), "sds", "sdsd", "gggg", "mdkdfk")))
+      .withMediaStreamTypeInfo(MediaStreamTypeInfo("AUDIO","aac","fre","French","YES","YES"))
+      .withMediaStreamInfo(pl.mediaStreamInfo.values map {
+        it => it.bandWith -> MediaStreamInfo(
+          it.bandWith,
+          it.codecs,
+          it.resolution,
+          it.closedCaption,
+          it.audio, it.asset.replace("asset", "french_asset"))
+      } toMap)
       .withMediaStreamFrameInfo(Map("2222" -> MediaStreamFrameInfo("2222", List("sdsd"), "sds", "sdsd")))
 
     //Then
     streamPlaylist.mediaStreamType.name should be("foobar")
-    streamPlaylist.mediaStreamTypeInfo.mediaType should be("acb")
-    streamPlaylist.mediaStreamInfo("1111").bandWith should be("1111")
+    streamPlaylist.mediaStreamTypeInfo.name should be("French")
+    streamPlaylist.mediaStreamInfo("2100000").asset should be("french_asset_1800k.m3u8")
     streamPlaylist.mediaStreamFrameInfo("2222").bandWith should be("2222")
 
   }
