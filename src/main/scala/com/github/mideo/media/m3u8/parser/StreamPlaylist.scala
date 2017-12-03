@@ -1,5 +1,7 @@
 package com.github.mideo.media.m3u8.parser
 
+import java.nio.file.{Files, Paths}
+
 trait StreamPlaylist {
   val mediaStreamType: MediaStreamType
   val mediaStreamTypeInfo: MediaStreamTypeInfo
@@ -7,6 +9,9 @@ trait StreamPlaylist {
   val mediaStreamFrameInfo: Map[String, MediaStreamFrameInfo]
 
   def write: String
+
+  def saveToFile(fileName:String): Unit
+
 
 }
 
@@ -24,6 +29,11 @@ case class M3U8MasterStreamPlaylist(mediaStreamType: MediaStreamType,
                                     mediaStreamFrameInfo: Map[String, MediaStreamFrameInfo]) extends StreamPlaylist {
 
   override def write: String = StreamTransformer.serialize(this)
+
+  override def saveToFile(fileName:String): Unit = {
+    Files.write(Paths.get(fileName), write.getBytes())
+  }
+
 
   def withMediaStreamType(m: MediaStreamType): M3U8MasterStreamPlaylist = {
     new M3U8MasterStreamPlaylist(
@@ -52,7 +62,7 @@ case class M3U8MasterStreamPlaylist(mediaStreamType: MediaStreamType,
       mediaStreamFrameInfo)
   }
 
-  def withMediaStreamFrameInfo(m:Map[String, MediaStreamFrameInfo]): M3U8MasterStreamPlaylist= {
+  def withMediaStreamFrameInfo(m: Map[String, MediaStreamFrameInfo]): M3U8MasterStreamPlaylist = {
     new M3U8MasterStreamPlaylist(
       mediaStreamType,
       mediaStreamIndependentSegments,
@@ -60,5 +70,6 @@ case class M3U8MasterStreamPlaylist(mediaStreamType: MediaStreamType,
       mediaStreamInfo,
       m)
   }
+
 
 }

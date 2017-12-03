@@ -1,3 +1,5 @@
+import java.nio.file.{Files, Paths}
+
 import com.github.mideo.media.m3u8.parser._
 
 import scala.io.Source
@@ -33,6 +35,26 @@ class StreamPlaylistTest extends M3U8ParserSuite {
     //Then
     streamPlaylist.write.isInstanceOf[String] should be(true)
 
+  }
+
+  test("test saveToFile") {
+    try {
+      //Given
+      val is = getClass.getClassLoader.getResource("master.m3u8").openStream()
+
+      val data: String = Source.fromInputStream(is).getLines().fold("") { (a, b) => s"$a\n$b" }
+
+      //When
+      val streamPlaylist = M3U8MasterStreamPlaylist(data)
+      streamPlaylist.saveToFile("master2.m3u8")
+
+      //Then
+      val data2: String = Source.fromFile("master2.m3u8").getLines().fold("") { (a, b) => s"$a\n$b" }
+
+      data2 should not be empty
+    } finally {
+      Files.delete(Paths.get("master2.m3u8"))
+    }
   }
 
   test("test builders") {
