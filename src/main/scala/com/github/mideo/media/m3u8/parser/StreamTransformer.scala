@@ -68,11 +68,11 @@ private object Deserializer {
   }
 
   def mapData(data: String): Array[MediaStreamPlaylistParts] = {
+
     data.split("#") map {
       case line: String if StreamPlaylistSection.MediaStreamType.isSectionType(line) =>
         val data = mapFields(line)
         MediaStreamType(data(StreamPlaylistSection.MediaStreamType.XARGS))
-
       case line: String if StreamPlaylistSection.MediaStreamIndependentSegments.isSectionType(line) =>
         val data = mapFields(line)
         MediaStreamIndependentSegments()
@@ -101,8 +101,28 @@ private object Deserializer {
           data(StreamPlaylistSection.MediaStreamTypeInfo.NAME),
           data(StreamPlaylistSection.MediaStreamTypeInfo.AUTOSELECT),
           data(StreamPlaylistSection.MediaStreamTypeInfo.DEFAULT))
+
+      case line: String if StreamPlaylistSection.MediaStreamTypeInitializationVectorCompatibilityVersion.isSectionType(line) =>
+        val data = mapFields(line)
+        MediaStreamTypeInitializationVectorCompatibilityVersion(data(StreamPlaylistSection.MediaStreamType.XARGS))
+      case line: String if StreamPlaylistSection.MediaStreamTargetDuration.isSectionType(line) =>
+        val data = mapFields(line)
+        MediaStreamTargetDuration(data(StreamPlaylistSection.MediaStreamType.XARGS))
+      case line: String if StreamPlaylistSection.MediaStreamMediaSequence.isSectionType(line) =>
+        val data = mapFields(line)
+        MediaStreamMediaSequence(data(StreamPlaylistSection.MediaStreamType.XARGS))
+      case line: String if StreamPlaylistSection.MediaStreamPlaylistType.isSectionType(line) =>
+        val data = mapFields(line)
+        MediaStreamPlaylistType(data(StreamPlaylistSection.MediaStreamType.XARGS))
+      case line: String if StreamPlaylistSection.MediaStreamProgramDateTime.isSectionType(line) =>
+        val data = mapFields(line)
+        MediaStreamProgramDateTime(data(StreamPlaylistSection.MediaStreamType.XARGS))
+
+
       case _ => None
-    } filter { x => x != None } map {
+    } filter {
+      x => x != None
+    } map {
       _.asInstanceOf[MediaStreamPlaylistParts]
     }
   }
@@ -110,8 +130,8 @@ private object Deserializer {
 
 private object Serializer {
 
-  def fold(playListPartsString:List[String]): String = {
-    playListPartsString.fold(""){(a, b) => s"$a\n$b"}
+  def fold(playListPartsString: List[String]): String = {
+    playListPartsString.fold("") { (a, b) => s"$a\n$b" }
   }
 
   def stringifyPlaylist(m3U8StreamPlaylist: M3U8MasterStreamPlaylist): List[String] = {
@@ -121,7 +141,7 @@ private object Serializer {
       m3U8StreamPlaylist.mediaStreamTypeInfo.toString,
       m3U8StreamPlaylist.mediaStreamInfo,
       m3U8StreamPlaylist.mediaStreamFrameInfo) foreach {
-      case value: Map[_,_] => arr ++= value.values.toList map (_.toString)
+      case value: Map[_, _] => arr ++= value.values.toList map (_.toString)
       case x => arr += x.toString
     }
     arr.toList

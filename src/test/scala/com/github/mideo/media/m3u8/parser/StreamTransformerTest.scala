@@ -4,7 +4,7 @@ import scala.io.Source
 
 class StreamTransformerTest extends M3U8ParserSuite {
 
-  test("testDeserialize") {
+  test("testDeserialize master playlist") {
     //Given
     val is =   getClass.getClassLoader.getResource("master.m3u8").openStream()
 
@@ -20,6 +20,17 @@ class StreamTransformerTest extends M3U8ParserSuite {
     streamPlaylist.mediaStreamFrameInfo.isEmpty should be(false)
 
   }
+
+//  test("testDeserialize asset playlist") {
+//    //Given
+//    val is =   getClass.getClassLoader.getResource("asset.m3u8").openStream()
+//
+//    val data:String = Source.fromInputStream(is).getLines().fold(""){(a, b) => s"$a\n$b"}
+//
+//    //When
+//    val streamPlaylist = StreamTransformer.deserialize(data)
+//
+//  }
 
   test("testSerialize") {
     //Given

@@ -55,4 +55,29 @@ object StreamPlaylistSection {
     val RESOLUTION = "RESOLUTION"
     val URI  = "URI"
   }
+  object MediaStreamTypeInitializationVectorCompatibilityVersion extends MediaStreamPlaylistSection {
+    override val identifier: String = "EXT-X-VERSION"
+    val VERSION ="VERSION"
+  }
+
+  object MediaStreamTargetDuration extends MediaStreamPlaylistSection {
+    override val identifier: String = "EXT-X-TARGETDURATION"
+  }
+
+  object MediaStreamMediaSequence extends MediaStreamPlaylistSection {
+    override val identifier: String = "EXT-X-MEDIA-SEQUENCE"
+  }
+
+  object MediaStreamPlaylistType extends MediaStreamPlaylistSection {
+    override val identifier: String = "EXT-X-PLAYLIST-TYPE"
+  }
+
+  object MediaStreamProgramDateTime extends MediaStreamPlaylistSection {
+    override val identifier: String = "EXT-X-PROGRAM-DATE-TIME"
+  }
+
+
+  object MediaStreamEnd extends MediaStreamPlaylistSection {
+    override val identifier: String = "EXT-X-ENDLIS"
+  }
 }

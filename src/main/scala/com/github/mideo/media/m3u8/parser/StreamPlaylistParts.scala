@@ -65,3 +65,22 @@ case class MediaStreamFrameInfo(bandWith: String,
 
 }
 
+case class MediaStreamTypeInitializationVectorCompatibilityVersion(version: String) extends MediaStreamPlaylistParts{
+  override def toString: String = s"#${StreamPlaylistSection.MediaStreamTypeInitializationVectorCompatibilityVersion.identifier}:$version"
+}
+
+case class MediaStreamTargetDuration(duration: String) extends MediaStreamPlaylistParts{
+  override def toString: String = s"#${StreamPlaylistSection.MediaStreamTargetDuration.identifier}:$duration"
+}
+
+case class MediaStreamMediaSequence(numberOfUrls: String) extends MediaStreamPlaylistParts{
+  override def toString: String = s"#${StreamPlaylistSection.MediaStreamMediaSequence.identifier}:$numberOfUrls"
+}
+
+case class MediaStreamPlaylistType(steamType: String) extends MediaStreamPlaylistParts{
+  override def toString: String = s"#${StreamPlaylistSection.MediaStreamPlaylistType.identifier}:$steamType"
+}
+
+case class MediaStreamProgramDateTime(dateTime: String) extends MediaStreamPlaylistParts{
+  override def toString: String = s"#${StreamPlaylistSection.MediaStreamProgramDateTime.identifier}:$dateTime"
+}
