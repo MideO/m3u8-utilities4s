@@ -14,7 +14,7 @@ class StreamPlaylistTest extends M3U8ParserSuite {
     val data:String = Source.fromInputStream(is).getLines()reduce{(a, b) => s"$a\n$b"}
 
     //When
-    val streamPlaylist = M3U8MasterStreamPlaylist(data)
+    val streamPlaylist = MasterStreamPlaylist(data)
 
 
     streamPlaylist.mediaStreamType.isInstanceOf[Option[MediaStreamType]] should be(true)
@@ -30,7 +30,7 @@ class StreamPlaylistTest extends M3U8ParserSuite {
     val data:String = Source.fromInputStream(is).getLines()reduce{(a, b) => s"$a\n$b"}
 
     //When
-    val streamPlaylist = M3U8MasterStreamPlaylist(data)
+    val streamPlaylist = MasterStreamPlaylist(data)
 
     //Then
     streamPlaylist.write.isInstanceOf[String] should be(true)
@@ -45,7 +45,7 @@ class StreamPlaylistTest extends M3U8ParserSuite {
       val data: String = Source.fromInputStream(is).getLines()reduce {_+","+_}
 
       //When
-      val streamPlaylist = M3U8MasterStreamPlaylist(data)
+      val streamPlaylist = MasterStreamPlaylist(data)
       streamPlaylist.saveToFile("master2.m3u8")
 
       //Then
@@ -65,7 +65,7 @@ class StreamPlaylistTest extends M3U8ParserSuite {
 
 
     //When
-    val pl = M3U8MasterStreamPlaylist(data)
+    val pl = MasterStreamPlaylist(data)
 
     val streamPlaylist = pl
       .withMediaStreamType(Option(MediaStreamType("foobar")))

@@ -7,9 +7,9 @@ private[media] object StreamTransformer {
   import Serializer._
   import Deserializer._
 
-  val deserialize: String => M3U8MasterStreamPlaylist = mapData _ andThen buildMediaStreamPlaylist
+  val deserialize: String => MasterStreamPlaylist = mapData _ andThen buildMediaStreamPlaylist
 
-  val serialize: M3U8MasterStreamPlaylist => String = stringifyPlaylist _ andThen reduce
+  val serialize: MasterStreamPlaylist => String = stringifyPlaylist _ andThen reduce
 }
 
 
@@ -34,7 +34,7 @@ private object Deserializer {
     Map("XARGS" -> listData.head.replace("\n", "").replace("\"", ""))
   }
 
-  def buildMediaStreamPlaylist(mappings: Array[MediaStreamPlaylistParts]): M3U8MasterStreamPlaylist = {
+  def buildMediaStreamPlaylist(mappings: Array[MediaStreamPlaylistParts]): MasterStreamPlaylist = {
 
     val mediaStreamType: Option[MediaStreamType] = mappings.filter(
       _.isInstanceOf[MediaStreamType]
@@ -42,6 +42,42 @@ private object Deserializer {
       case a: Array[MediaStreamPlaylistParts] if a.isEmpty => None
       case a: Array[MediaStreamPlaylistParts] if !a.isEmpty => Some(a.head.asInstanceOf[MediaStreamType])
     }
+
+    val mediaStreamTypeInitializationVectorCompatibilityVersion: Option[MediaStreamTypeInitializationVectorCompatibilityVersion] = mappings.filter(
+      _.isInstanceOf[MediaStreamTypeInitializationVectorCompatibilityVersion]
+    ) match {
+      case a: Array[MediaStreamPlaylistParts] if a.isEmpty => None
+      case a: Array[MediaStreamPlaylistParts] if !a.isEmpty => Some(a.head.asInstanceOf[MediaStreamTypeInitializationVectorCompatibilityVersion])
+    }
+
+    val mediaStreamTargetDuration: Option[MediaStreamTargetDuration] = mappings.filter(
+      _.isInstanceOf[MediaStreamTargetDuration]
+    ) match {
+      case a: Array[MediaStreamPlaylistParts] if a.isEmpty => None
+      case a: Array[MediaStreamPlaylistParts] if !a.isEmpty => Some(a.head.asInstanceOf[MediaStreamTargetDuration])
+    }
+
+    val mediaStreamMediaSequence: Option[MediaStreamMediaSequence] = mappings.filter(
+      _.isInstanceOf[MediaStreamMediaSequence]
+    ) match {
+      case a: Array[MediaStreamPlaylistParts] if a.isEmpty => None
+      case a: Array[MediaStreamPlaylistParts] if !a.isEmpty => Some(a.head.asInstanceOf[MediaStreamMediaSequence])
+    }
+
+    val mediaStreamPlaylistType: Option[MediaStreamPlaylistType] = mappings.filter(
+      _.isInstanceOf[MediaStreamPlaylistType]
+    ) match {
+      case a: Array[MediaStreamPlaylistParts] if a.isEmpty => None
+      case a: Array[MediaStreamPlaylistParts] if !a.isEmpty => Some(a.head.asInstanceOf[MediaStreamPlaylistType])
+    }
+
+    val mediaStreamProgramDateTime: Option[MediaStreamProgramDateTime] = mappings.filter(
+      _.isInstanceOf[MediaStreamProgramDateTime]
+    ) match {
+      case a: Array[MediaStreamPlaylistParts] if a.isEmpty => None
+      case a: Array[MediaStreamPlaylistParts] if !a.isEmpty => Some(a.head.asInstanceOf[MediaStreamProgramDateTime])
+    }
+
 
     val mediaStreamIndependentSegments = mappings.filter {
       _.isInstanceOf[MediaStreamIndependentSegments]
@@ -83,7 +119,7 @@ private object Deserializer {
       } toMap
     }
 
-    M3U8MasterStreamPlaylist(mediaStreamType, mediaStreamIndependentSegments, mediaStreamTypeInfo, mediaStreamInfo, mediaStreamFrameInfo)
+    MasterStreamPlaylist(mediaStreamType, mediaStreamIndependentSegments, mediaStreamTypeInfo, mediaStreamInfo, mediaStreamFrameInfo)
 
   }
 
@@ -124,23 +160,22 @@ private object Deserializer {
 
       case line: String if StreamPlaylistSection.MediaStreamTypeInitializationVectorCompatibilityVersion.isSectionType(line) =>
         val data = mapFields(line)
-        MediaStreamTypeInitializationVectorCompatibilityVersion(data(StreamPlaylistSection.MediaStreamType.XARGS))
+        MediaStreamTypeInitializationVectorCompatibilityVersion(data(StreamPlaylistSection.MediaStreamTypeInitializationVectorCompatibilityVersion.XARGS))
       case line: String if StreamPlaylistSection.MediaStreamTargetDuration.isSectionType(line) =>
         val data = mapFields(line)
-        MediaStreamTargetDuration(data(StreamPlaylistSection.MediaStreamType.XARGS))
+        MediaStreamTargetDuration(data(StreamPlaylistSection.MediaStreamTargetDuration.XARGS))
       case line: String if StreamPlaylistSection.MediaStreamMediaSequence.isSectionType(line) =>
         val data = mapFields(line)
-        MediaStreamMediaSequence(data(StreamPlaylistSection.MediaStreamType.XARGS))
+        MediaStreamMediaSequence(data(StreamPlaylistSection.MediaStreamMediaSequence.XARGS))
       case line: String if StreamPlaylistSection.MediaStreamPlaylistType.isSectionType(line) =>
         val data = mapFields(line)
-        MediaStreamPlaylistType(data(StreamPlaylistSection.MediaStreamType.XARGS))
+        MediaStreamPlaylistType(data(StreamPlaylistSection.MediaStreamPlaylistType.XARGS))
       case line: String if StreamPlaylistSection.MediaStreamProgramDateTime.isSectionType(line) =>
         val data = mapFields(line)
-        MediaStreamProgramDateTime(data(StreamPlaylistSection.MediaStreamType.XARGS))
-
-
+        MediaStreamProgramDateTime(data(StreamPlaylistSection.MediaStreamProgramDateTime.XARGS))
       case _ => None
-    } filter {
+
+     } filter {
       x => x != None
     } map {
       _.asInstanceOf[MediaStreamPlaylistParts]
@@ -151,10 +186,12 @@ private object Deserializer {
 private object Serializer {
 
   def reduce(playListPartsString: List[String]): String = {
-    playListPartsString.reduce {_+","+_}
+    playListPartsString.reduce {
+      _ + "," + _
+    }
   }
 
-  def stringifyPlaylist(m3U8StreamPlaylist: M3U8MasterStreamPlaylist): List[String] = {
+  def stringifyPlaylist(m3U8StreamPlaylist: MasterStreamPlaylist): List[String] = {
     val arr = mutable.ArrayBuffer.empty[String]
     List(m3U8StreamPlaylist.mediaStreamType.getOrElse(None),
       m3U8StreamPlaylist.mediaStreamIndependentSegments.getOrElse(None),
@@ -162,7 +199,7 @@ private object Serializer {
       m3U8StreamPlaylist.mediaStreamInfo,
       m3U8StreamPlaylist.mediaStreamFrameInfo) foreach {
       case value: Map[_, _] => arr ++= value.values.toList map (_.toString)
-      case x:MediaStreamPlaylistParts => arr += x.toString
+      case x: MediaStreamPlaylistParts => arr += x.toString
       case _ => //doNothing
     }
     arr.toList

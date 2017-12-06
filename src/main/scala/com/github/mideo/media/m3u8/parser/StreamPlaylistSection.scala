@@ -78,11 +78,6 @@ object StreamPlaylistSection {
     override val identifier: String = "EXT-X-PROGRAM-DATE-TIME:"
   }
 
-
-  object MediaStreamEnd extends MediaStreamPlaylistSection {
-    override val identifier: String = "EXT-X-ENDLIST"
-  }
-
   object MediaStreamPlaylistItem extends MediaStreamPlaylistSection {
     override val identifier: String = "EXTINF:"
   }
@@ -92,6 +87,10 @@ object StreamPlaylistSection {
     val METHOD = "METHOD"
     val URI = "URI"
     val IV = "IV"
+  }
+
+  object MediaStreamEnd extends MediaStreamPlaylistSection {
+    override val identifier: String = "EXT-X-ENDLIST"
   }
 
 }

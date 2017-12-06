@@ -61,7 +61,7 @@ streamPlaylist.mediaStreamTypeInfo.get("210000")
 
 
 //edit
-val updated: M3U8MasterStreamPlaylist = streamPlaylist
+val updated: MasterStreamPlaylist = streamPlaylist
 .withMediaStreamTypeInfo(MediaStreamTypeInfo("AUDIO","aac","fre","French","YES","YES"))  
 .withMediaStreamInfo(updated.mediaStreamInfo.values map {
         it => it.bandWith -> MediaStreamInfo(

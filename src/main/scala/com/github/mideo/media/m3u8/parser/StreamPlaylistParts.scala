@@ -96,3 +96,7 @@ case class MediaStreamPlaylistItemDRMInfo(method:String, uri:String, initializat
 case class MediaStreamPlaylistItem(duration: String, drmInfo:Option[MediaStreamPlaylistItemDRMInfo], uri: String) extends MediaStreamPlaylistParts{
   override def toString: String = s"#${StreamPlaylistSection.MediaStreamPlaylistItem.identifier}$duration\n${drmInfo.get.toString}\n$uri"
 }
+
+case class MediaStreamEnd() extends MediaStreamPlaylistParts{
+  override def toString: String = s"#${StreamPlaylistSection.MediaStreamEnd.identifier}"
+}
