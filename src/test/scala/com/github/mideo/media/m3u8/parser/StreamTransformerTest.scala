@@ -13,9 +13,9 @@ class StreamTransformerTest extends M3U8ParserSuite {
     //When
     val streamPlaylist = StreamTransformer.deserialize(data)
 
-    streamPlaylist.mediaStreamType.name should be("EXTM3U")
-    streamPlaylist.mediaStreamIndependentSegments.toString should be("#EXT-X-INDEPENDENT-SEGMENTS")
-    streamPlaylist.mediaStreamTypeInfo.name should be("English")
+    streamPlaylist.mediaStreamType.get.name should be("EXTM3U")
+    streamPlaylist.mediaStreamIndependentSegments.get.toString should be("#EXT-X-INDEPENDENT-SEGMENTS")
+    streamPlaylist.mediaStreamTypeInfo.get.name should be("English")
     streamPlaylist.mediaStreamInfo.isEmpty should be(false)
     streamPlaylist.mediaStreamFrameInfo.isEmpty should be(false)
 
@@ -44,13 +44,51 @@ class StreamTransformerTest extends M3U8ParserSuite {
     val result = StreamTransformer.serialize(streamPlaylist)
 
     //Then
-    val res: Map[String, Boolean] = result.split("\n") map {
-      x => x -> data.contains(x)
+    val res: Map[String, Boolean] = data.split("\n") map {
+      x => x -> result.contains(x)
     } toMap
 
     res.values foreach(
       _ should be(true)
     )
+
+  }
+
+  test("testDeserialize with missing parts") {
+    //Given
+    val is =   getClass.getClassLoader.getResource("master_missing_parts.m3u8").openStream()
+
+    val data:String = Source.fromInputStream(is).getLines().fold(""){(a, b) => s"$a\n$b"}
+
+    //When
+    val streamPlaylist = StreamTransformer.deserialize(data)
+
+    streamPlaylist.mediaStreamType.get.name should be("EXTM3U")
+    streamPlaylist.mediaStreamIndependentSegments should be(None)
+    streamPlaylist.mediaStreamTypeInfo.get.name should be("English")
+    streamPlaylist.mediaStreamInfo.isEmpty should be(false)
+    streamPlaylist.mediaStreamFrameInfo.isEmpty should be(true)
+
+  }
+  test("testSerialize with missing parts") {
+    //Given
+    val is =   getClass.getClassLoader.getResource("master_missing_parts.m3u8").openStream()
+
+    val data:String = Source.fromInputStream(is).getLines().fold(""){(a, b) => s"$a\n$b"}
+
+    val streamPlaylist = StreamTransformer.deserialize(data)
+
+    //When
+    val result = StreamTransformer.serialize(streamPlaylist)
+
+    //Then
+    val res: Map[String, Boolean] = data.split("\n") map {
+      x => x -> result.contains(x)
+    } toMap
+
+    res.values foreach(
+      _ should be(true)
+      )
 
   }
 

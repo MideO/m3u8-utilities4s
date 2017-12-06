@@ -35,44 +35,64 @@ private object Deserializer {
   }
 
   def buildMediaStreamPlaylist(mappings: Array[MediaStreamPlaylistParts]): M3U8MasterStreamPlaylist = {
-    val mediaStreamType = mappings.filter {
+
+    val mediaStreamType: Option[MediaStreamType] = mappings.filter(
       _.isInstanceOf[MediaStreamType]
-    }.head.asInstanceOf[MediaStreamType]
+    ) match {
+      case a: Array[MediaStreamPlaylistParts] if a.isEmpty => None
+      case a: Array[MediaStreamPlaylistParts] if !a.isEmpty => Some(a.head.asInstanceOf[MediaStreamType])
+    }
+
     val mediaStreamIndependentSegments = mappings.filter {
       _.isInstanceOf[MediaStreamIndependentSegments]
-    }.head.asInstanceOf[MediaStreamIndependentSegments]
+    } match {
+      case a: Array[MediaStreamPlaylistParts] if a.isEmpty => None
+      case a: Array[MediaStreamPlaylistParts] if !a.isEmpty => Some(a.head.asInstanceOf[MediaStreamIndependentSegments])
+    }
 
     val mediaStreamTypeInfo = mappings.filter {
       _.isInstanceOf[MediaStreamTypeInfo]
-    }.head.asInstanceOf[MediaStreamTypeInfo]
+    } match {
+      case a: Array[MediaStreamPlaylistParts] if a.isEmpty => None
+      case a: Array[MediaStreamPlaylistParts] if !a.isEmpty => Some(a.head.asInstanceOf[MediaStreamTypeInfo])
+    }
+
 
     val mediaStreamInfo = mappings.filter {
       _.isInstanceOf[MediaStreamInfo]
-    } map { it => {
-      val l = it.asInstanceOf[MediaStreamInfo]
-      l.bandWith -> l
+    } match {
+      case a: Array[MediaStreamPlaylistParts] if a.isEmpty => Map.empty[String, MediaStreamInfo]
+      case a: Array[MediaStreamPlaylistParts] if !a.isEmpty => a map {
+        it => {
+          val l = it.asInstanceOf[MediaStreamInfo]
+          l.bandWith -> l
+        }
+      } toMap
     }
-    } toMap
+
 
     val mediaStreamFrameInfo = mappings.filter {
       _.isInstanceOf[MediaStreamFrameInfo]
-    } map {
-      it => {
-        val l = it.asInstanceOf[MediaStreamFrameInfo]
-        l.bandWith -> l
-      }
-    } toMap
+    } match {
+      case a: Array[MediaStreamPlaylistParts] if a.isEmpty => Map.empty[String, MediaStreamFrameInfo]
+      case a: Array[MediaStreamPlaylistParts] if !a.isEmpty => a map {
+        it => {
+          val l = it.asInstanceOf[MediaStreamFrameInfo]
+          l.bandWith -> l
+        }
+      } toMap
+    }
 
     M3U8MasterStreamPlaylist(mediaStreamType, mediaStreamIndependentSegments, mediaStreamTypeInfo, mediaStreamInfo, mediaStreamFrameInfo)
 
   }
 
   def mapData(data: String): Array[MediaStreamPlaylistParts] = {
-
     data.split("#") map {
       case line: String if StreamPlaylistSection.MediaStreamType.isSectionType(line) =>
         val data = mapFields(line)
         MediaStreamType(data(StreamPlaylistSection.MediaStreamType.XARGS))
+
       case line: String if StreamPlaylistSection.MediaStreamIndependentSegments.isSectionType(line) =>
         val data = mapFields(line)
         MediaStreamIndependentSegments()
@@ -136,13 +156,14 @@ private object Serializer {
 
   def stringifyPlaylist(m3U8StreamPlaylist: M3U8MasterStreamPlaylist): List[String] = {
     val arr = mutable.ArrayBuffer.empty[String]
-    List(m3U8StreamPlaylist.mediaStreamType.toString,
-      m3U8StreamPlaylist.mediaStreamIndependentSegments,
-      m3U8StreamPlaylist.mediaStreamTypeInfo.toString,
+    List(m3U8StreamPlaylist.mediaStreamType.getOrElse(None),
+      m3U8StreamPlaylist.mediaStreamIndependentSegments.getOrElse(None),
+      m3U8StreamPlaylist.mediaStreamTypeInfo.getOrElse(None),
       m3U8StreamPlaylist.mediaStreamInfo,
       m3U8StreamPlaylist.mediaStreamFrameInfo) foreach {
       case value: Map[_, _] => arr ++= value.values.toList map (_.toString)
-      case x => arr += x.toString
+      case x:MediaStreamPlaylistParts => arr += x.toString
+      case _ => //doNothing
     }
     arr.toList
   }

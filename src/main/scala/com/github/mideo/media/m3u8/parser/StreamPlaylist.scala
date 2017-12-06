@@ -3,8 +3,8 @@ package com.github.mideo.media.m3u8.parser
 import java.nio.file.{Files, Paths}
 
 trait StreamPlaylist {
-  val mediaStreamType: MediaStreamType
-  val mediaStreamTypeInfo: MediaStreamTypeInfo
+  val mediaStreamType: Option[MediaStreamType]
+  val mediaStreamTypeInfo: Option[MediaStreamTypeInfo]
   val mediaStreamInfo: Map[String, MediaStreamInfo]
   val mediaStreamFrameInfo: Map[String, MediaStreamFrameInfo]
 
@@ -22,9 +22,9 @@ object M3U8MasterStreamPlaylist {
 }
 
 
-case class M3U8MasterStreamPlaylist(mediaStreamType: MediaStreamType,
-                                    mediaStreamIndependentSegments: MediaStreamIndependentSegments,
-                                    mediaStreamTypeInfo: MediaStreamTypeInfo,
+case class M3U8MasterStreamPlaylist(mediaStreamType: Option[MediaStreamType],
+                                    mediaStreamIndependentSegments: Option[MediaStreamIndependentSegments],
+                                    mediaStreamTypeInfo: Option[MediaStreamTypeInfo ],
                                     mediaStreamInfo: Map[String, MediaStreamInfo],
                                     mediaStreamFrameInfo: Map[String, MediaStreamFrameInfo]) extends StreamPlaylist {
 
@@ -35,7 +35,7 @@ case class M3U8MasterStreamPlaylist(mediaStreamType: MediaStreamType,
   }
 
 
-  def withMediaStreamType(m: MediaStreamType): M3U8MasterStreamPlaylist = {
+  def withMediaStreamType(m: Option[MediaStreamType]): M3U8MasterStreamPlaylist = {
     new M3U8MasterStreamPlaylist(
       m,
       mediaStreamIndependentSegments,
@@ -44,7 +44,7 @@ case class M3U8MasterStreamPlaylist(mediaStreamType: MediaStreamType,
       mediaStreamFrameInfo)
   }
 
-  def withMediaStreamTypeInfo(m: MediaStreamTypeInfo): M3U8MasterStreamPlaylist = {
+  def withMediaStreamTypeInfo(m: Option[MediaStreamTypeInfo]): M3U8MasterStreamPlaylist = {
     new M3U8MasterStreamPlaylist(
       mediaStreamType,
       mediaStreamIndependentSegments,

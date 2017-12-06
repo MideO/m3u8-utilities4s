@@ -1,6 +1,6 @@
-name := "m3u8-Parser"
+name := "m3u8-parser"
 
-version := "0.1"
+version := "0.1-SNAPSHOT"
 
 scalaVersion := "2.12.4"
 
@@ -91,6 +91,8 @@ import sbtrelease.ReleasePlugin.autoImport.ReleaseTransformations._
 releaseVersionBump := sbtrelease.Version.Bump.Next
 
 releaseIgnoreUntrackedFiles := true
+
+releaseCrossBuild := true
 
 releasePublishArtifactsAction := PgpKeys.publishSigned.value
 
