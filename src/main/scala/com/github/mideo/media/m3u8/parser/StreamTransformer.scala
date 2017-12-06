@@ -9,7 +9,7 @@ private[media] object StreamTransformer {
 
   val deserialize: String => M3U8MasterStreamPlaylist = mapData _ andThen buildMediaStreamPlaylist
 
-  val serialize: M3U8MasterStreamPlaylist => String = stringifyPlaylist _ andThen fold
+  val serialize: M3U8MasterStreamPlaylist => String = stringifyPlaylist _ andThen reduce
 }
 
 
@@ -150,8 +150,8 @@ private object Deserializer {
 
 private object Serializer {
 
-  def fold(playListPartsString: List[String]): String = {
-    playListPartsString.fold("") { (a, b) => s"$a\n$b" }
+  def reduce(playListPartsString: List[String]): String = {
+    playListPartsString.reduce {_+","+_}
   }
 
   def stringifyPlaylist(m3U8StreamPlaylist: M3U8MasterStreamPlaylist): List[String] = {

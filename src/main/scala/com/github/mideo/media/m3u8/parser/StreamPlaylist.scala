@@ -70,6 +70,4 @@ case class M3U8MasterStreamPlaylist(mediaStreamType: Option[MediaStreamType],
       mediaStreamInfo,
       m)
   }
-
-
 }

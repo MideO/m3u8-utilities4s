@@ -8,7 +8,7 @@ class StreamTransformerTest extends M3U8ParserSuite {
     //Given
     val is =   getClass.getClassLoader.getResource("master.m3u8").openStream()
 
-    val data:String = Source.fromInputStream(is).getLines().fold(""){(a, b) => s"$a\n$b"}
+    val data:String = Source.fromInputStream(is).getLines()reduce {_+"\n"+_}
 
     //When
     val streamPlaylist = StreamTransformer.deserialize(data)
@@ -21,22 +21,22 @@ class StreamTransformerTest extends M3U8ParserSuite {
 
   }
 
-//  test("testDeserialize asset playlist") {
-//    //Given
-//    val is =   getClass.getClassLoader.getResource("asset.m3u8").openStream()
-//
-//    val data:String = Source.fromInputStream(is).getLines().fold(""){(a, b) => s"$a\n$b"}
-//
-//    //When
-//    val streamPlaylist = StreamTransformer.deserialize(data)
-//
-//  }
+  test("testDeserialize asset playlist") {
+    //Given
+    val is =   getClass.getClassLoader.getResource("asset.m3u8").openStream()
+
+    val data:String = Source.fromInputStream(is).getLines()reduce {_+"\n"+_}
+
+    //When
+    val streamPlaylist = StreamTransformer.deserialize(data)
+
+  }
 
   test("testSerialize") {
     //Given
     val is =   getClass.getClassLoader.getResource("master.m3u8").openStream()
 
-    val data:String = Source.fromInputStream(is).getLines().fold(""){(a, b) => s"$a\n$b"}
+    val data:String = Source.fromInputStream(is).getLines()reduce {_+"\n"+_}
 
     val streamPlaylist = StreamTransformer.deserialize(data)
 
@@ -44,13 +44,9 @@ class StreamTransformerTest extends M3U8ParserSuite {
     val result = StreamTransformer.serialize(streamPlaylist)
 
     //Then
-    val res: Map[String, Boolean] = data.split("\n") map {
-      x => x -> result.contains(x)
-    } toMap
-
-    res.values foreach(
-      _ should be(true)
-    )
+    data.split("\n") map {
+      x => withClue(s"$x not in result") { result.contains(x) should be(true) }
+    }
 
   }
 
@@ -58,7 +54,7 @@ class StreamTransformerTest extends M3U8ParserSuite {
     //Given
     val is =   getClass.getClassLoader.getResource("master_missing_parts.m3u8").openStream()
 
-    val data:String = Source.fromInputStream(is).getLines().fold(""){(a, b) => s"$a\n$b"}
+    val data:String = Source.fromInputStream(is).getLines()reduce {_+"\n"+_}
 
     //When
     val streamPlaylist = StreamTransformer.deserialize(data)
@@ -74,7 +70,7 @@ class StreamTransformerTest extends M3U8ParserSuite {
     //Given
     val is =   getClass.getClassLoader.getResource("master_missing_parts.m3u8").openStream()
 
-    val data:String = Source.fromInputStream(is).getLines().fold(""){(a, b) => s"$a\n$b"}
+    val data:String = Source.fromInputStream(is).getLines()reduce {_+"\n"+_}
 
     val streamPlaylist = StreamTransformer.deserialize(data)
 
@@ -82,13 +78,9 @@ class StreamTransformerTest extends M3U8ParserSuite {
     val result = StreamTransformer.serialize(streamPlaylist)
 
     //Then
-    val res: Map[String, Boolean] = data.split("\n") map {
-      x => x -> result.contains(x)
-    } toMap
-
-    res.values foreach(
-      _ should be(true)
-      )
+    data.split("\n") map {
+      x => withClue(s"$x not in result") { result.contains(x) should be(true) }
+    }
 
   }
 

@@ -11,7 +11,7 @@ class StreamPlaylistTest extends M3U8ParserSuite {
     //Given
     val is =   getClass.getClassLoader.getResource("master.m3u8").openStream()
 
-    val data:String = Source.fromInputStream(is).getLines().fold(""){(a, b) => s"$a\n$b"}
+    val data:String = Source.fromInputStream(is).getLines()reduce{(a, b) => s"$a\n$b"}
 
     //When
     val streamPlaylist = M3U8MasterStreamPlaylist(data)
@@ -27,7 +27,7 @@ class StreamPlaylistTest extends M3U8ParserSuite {
     //Given
     val is =   getClass.getClassLoader.getResource("master.m3u8").openStream()
 
-    val data:String = Source.fromInputStream(is).getLines().fold(""){(a, b) => s"$a\n$b"}
+    val data:String = Source.fromInputStream(is).getLines()reduce{(a, b) => s"$a\n$b"}
 
     //When
     val streamPlaylist = M3U8MasterStreamPlaylist(data)
@@ -42,14 +42,14 @@ class StreamPlaylistTest extends M3U8ParserSuite {
       //Given
       val is = getClass.getClassLoader.getResource("master.m3u8").openStream()
 
-      val data: String = Source.fromInputStream(is).getLines().fold("") { (a, b) => s"$a\n$b" }
+      val data: String = Source.fromInputStream(is).getLines()reduce {_+","+_}
 
       //When
       val streamPlaylist = M3U8MasterStreamPlaylist(data)
       streamPlaylist.saveToFile("master2.m3u8")
 
       //Then
-      val data2: String = Source.fromFile("master2.m3u8").getLines().fold("") { (a, b) => s"$a\n$b" }
+      val data2: String = Source.fromFile("master2.m3u8").getLines()reduce {_+","+_}
 
       data2 should not be empty
     } finally {
@@ -61,7 +61,7 @@ class StreamPlaylistTest extends M3U8ParserSuite {
     //Given
     val is =   getClass.getClassLoader.getResource("master.m3u8").openStream()
 
-    val data:String = Source.fromInputStream(is).getLines().fold(""){(a, b) => s"$a\n$b"}
+    val data:String = Source.fromInputStream(is).getLines()reduce{(a, b) => s"$a\n$b"}
 
 
     //When

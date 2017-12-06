@@ -53,7 +53,7 @@ import scala.io.Source
 
 val is =   getClass.getClassLoader.getResource("master.m3u8").openStream()
 
-val data:String = Source.fromInputStream(is).getLines().fold(""){(a, b) => s"$a\n$b"}
+val data:String = Source.fromInputStream(is).getLines()reduce{(a, b) => s"$a\n$b"}
 //create domain object
 val streamPlaylist = StreamTransformer.deserialize(data)
 streamPlaylist.mediaStreamType.name

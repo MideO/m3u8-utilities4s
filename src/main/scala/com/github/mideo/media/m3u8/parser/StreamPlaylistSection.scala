@@ -8,7 +8,7 @@ object StreamPlaylistSection {
     val XARGS = "XARGS"
   }
 
-  sealed trait MediaStreamPlaylistSection extends SectionFields{
+  sealed trait MediaStreamPlaylistSection extends SectionFields {
     val identifier: String
 
     def isSectionType(string: String): Boolean = {
@@ -24,11 +24,12 @@ object StreamPlaylistSection {
     override def isSectionType(string: String): Boolean = {
       string.toLowerCase.startsWith(identifier.toLowerCase) && !string.contains("-")
     }
+
     override val identifier: String = "EXT"
   }
 
   object MediaStreamTypeInfo extends MediaStreamPlaylistSection {
-    override val identifier: String = "EXT-X-MEDIA"
+    override val identifier: String = "EXT-X-MEDIA:"
 
     val TYPE = "TYPE"
     val GROUP_ID = "GROUP-ID"
@@ -39,7 +40,7 @@ object StreamPlaylistSection {
   }
 
   object MediaStreamInfo extends MediaStreamPlaylistSection {
-    override val identifier: String = "EXT-X-STREAM-INF"
+    override val identifier: String = "EXT-X-STREAM-INF:"
     val BANDWIDTH = "BANDWIDTH"
     val CODECS = "CODECS"
     val RESOLUTION = "RESOLUTION"
@@ -49,35 +50,48 @@ object StreamPlaylistSection {
   }
 
   object MediaStreamFrameInfo extends MediaStreamPlaylistSection {
-    override val identifier: String = "EXT-X-I-FRAME-STREAM-INF"
-    val BANDWIDTH ="BANDWIDTH"
+    override val identifier: String = "EXT-X-I-FRAME-STREAM-INF:"
+    val BANDWIDTH = "BANDWIDTH"
     val CODECS = "CODECS"
     val RESOLUTION = "RESOLUTION"
-    val URI  = "URI"
+    val URI = "URI"
   }
+
   object MediaStreamTypeInitializationVectorCompatibilityVersion extends MediaStreamPlaylistSection {
-    override val identifier: String = "EXT-X-VERSION"
-    val VERSION ="VERSION"
+    override val identifier: String = "EXT-X-VERSION:"
+    val VERSION = "VERSION"
   }
 
   object MediaStreamTargetDuration extends MediaStreamPlaylistSection {
-    override val identifier: String = "EXT-X-TARGETDURATION"
+    override val identifier: String = "EXT-X-TARGETDURATION:"
   }
 
   object MediaStreamMediaSequence extends MediaStreamPlaylistSection {
-    override val identifier: String = "EXT-X-MEDIA-SEQUENCE"
+    override val identifier: String = "EXT-X-MEDIA-SEQUENCE:"
   }
 
   object MediaStreamPlaylistType extends MediaStreamPlaylistSection {
-    override val identifier: String = "EXT-X-PLAYLIST-TYPE"
+    override val identifier: String = "EXT-X-PLAYLIST-TYPE:"
   }
 
   object MediaStreamProgramDateTime extends MediaStreamPlaylistSection {
-    override val identifier: String = "EXT-X-PROGRAM-DATE-TIME"
+    override val identifier: String = "EXT-X-PROGRAM-DATE-TIME:"
   }
 
 
   object MediaStreamEnd extends MediaStreamPlaylistSection {
-    override val identifier: String = "EXT-X-ENDLIS"
+    override val identifier: String = "EXT-X-ENDLIST"
   }
+
+  object MediaStreamPlaylistItem extends MediaStreamPlaylistSection {
+    override val identifier: String = "EXTINF:"
+  }
+
+  object MediaStreamPlaylistItemDRMInfo extends MediaStreamPlaylistSection {
+    override val identifier: String = "EXT-X-KEY:"
+    val METHOD = "METHOD"
+    val URI = "URI"
+    val IV = "IV"
+  }
+
 }

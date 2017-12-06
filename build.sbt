@@ -19,6 +19,7 @@ description := "A keystore manager backed by Java KeyStore on file system as def
 resolvers ++= Seq(
   "scalaz-bintray" at "https://dl.bintray.com/scalaz/releases",
   "Sonatypes" at "https://oss.sonatype.org/content/repositories/releases",
+  Resolver.DefaultMavenRepository
 
 )
 
