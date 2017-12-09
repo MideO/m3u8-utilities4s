@@ -37,8 +37,8 @@ private object Deserializer {
     }
     Map("XARGS" -> strip(listData.head))
   }
-  def strip(s:String, subtring:String=""): String = {
-    s.replace(subtring, "").replace("\n", "").replace("\"", "")
+  def strip(s:String, subString:String=""): String = {
+    s.replace(subString, "").replace("\n", "").replace("\"", "")
   }
 
   def buildVodMediaStreamPlaylist(mappings: Array[MediaStreamPlaylistParts]): VodStreamPlaylist = {
