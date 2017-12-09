@@ -1,6 +1,5 @@
 package com.github.mideo.media.m3u8.parser
 
-import java.nio.file.{Files, Paths}
 
 object MasterStreamPlaylist {
   def apply(data: String): MasterStreamPlaylist = {
@@ -14,12 +13,6 @@ case class MasterStreamPlaylist(mediaStreamType: Option[MediaStreamType],
                                 mediaStreamTypeInfo: Option[MediaStreamTypeInfo ],
                                 mediaStreamInfo: Map[String, MediaStreamInfo],
                                 mediaStreamFrameInfo: Map[String, MediaStreamFrameInfo]) extends StreamPlaylist {
-
-  override def write: String = StreamTransformer.serialize(this)
-
-  override def saveToFile(fileName:String): Unit = {
-    Files.write(Paths.get(fileName), write.getBytes())
-  }
 
 
   def withMediaStreamType(m: Option[MediaStreamType]): MasterStreamPlaylist = {
@@ -57,4 +50,6 @@ case class MasterStreamPlaylist(mediaStreamType: Option[MediaStreamType],
       mediaStreamInfo,
       m)
   }
+
+  override def write: String = StreamTransformer.serialize(this)
 }

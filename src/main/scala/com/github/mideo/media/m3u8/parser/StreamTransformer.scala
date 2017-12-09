@@ -7,7 +7,9 @@ private[media] object StreamTransformer {
   import Serializer._
   import Deserializer._
 
-  val deserialize: String => MasterStreamPlaylist = mapData _ andThen buildMediaStreamPlaylist
+  val deserialize: String => MasterStreamPlaylist = mapData _ andThen buildMasterMediaStreamPlaylist
+
+  val deserializeVOD: String => VodStreamPlaylist = mapData _ andThen buildVodMediaStreamPlaylist
 
   val serialize: MasterStreamPlaylist => String = stringifyPlaylist _ andThen reduce
 }
@@ -15,7 +17,7 @@ private[media] object StreamTransformer {
 
 private object Deserializer {
   private def mapFields(s: String): Map[String, String] = {
-    val listData = s.split(":")
+    val listData = s.split(":(?=(?!//))")
     if (listData.length > 1) {
       val splat = {
         if (listData.tail.head.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)|\n").length > 1) {
@@ -31,11 +33,13 @@ private object Deserializer {
           else "XARGS" -> list.head.replace("\"", "").replace("\n", "")
         ).toMap
     }
-    Map("XARGS" -> listData.head.replace("\n", "").replace("\"", ""))
+    Map("XARGS" -> strip(listData.head))
+  }
+  def strip(s:String, subtring:String=""): String = {
+    s.replace(subtring, "").replace("\n", "").replace("\"", "")
   }
 
-  def buildMediaStreamPlaylist(mappings: Array[MediaStreamPlaylistParts]): MasterStreamPlaylist = {
-
+  def buildVodMediaStreamPlaylist(mappings: Array[MediaStreamPlaylistParts]): VodStreamPlaylist = {
     val mediaStreamType: Option[MediaStreamType] = mappings.filter(
       _.isInstanceOf[MediaStreamType]
     ) match {
@@ -78,6 +82,40 @@ private object Deserializer {
       case a: Array[MediaStreamPlaylistParts] if !a.isEmpty => Some(a.head.asInstanceOf[MediaStreamProgramDateTime])
     }
 
+    val mediaStreamPlaylistItem = mappings.filter {
+      _.isInstanceOf[MediaStreamPlaylistItem]
+    } match {
+      case a: Array[MediaStreamPlaylistParts] if a.isEmpty => None
+      case a: Array[MediaStreamPlaylistParts] if !a.isEmpty => Some(a.toList.asInstanceOf[List[MediaStreamPlaylistItem]])
+    }
+
+    val mediaStreamEnd = mappings.filter {
+      _.isInstanceOf[MediaStreamEnd]
+    } match {
+      case a: Array[MediaStreamPlaylistParts] if a.isEmpty => None
+      case a: Array[MediaStreamPlaylistParts] if !a.isEmpty => Some(a.head.asInstanceOf[MediaStreamEnd])
+    }
+
+    VodStreamPlaylist(
+      mediaStreamType,
+      mediaStreamTypeInitializationVectorCompatibilityVersion,
+      mediaStreamTargetDuration,
+      mediaStreamMediaSequence,
+      mediaStreamPlaylistType,
+      mediaStreamProgramDateTime,
+      mediaStreamPlaylistItem,
+      mediaStreamEnd
+    )
+  }
+
+  def buildMasterMediaStreamPlaylist(mappings: Array[MediaStreamPlaylistParts]): MasterStreamPlaylist = {
+
+    val mediaStreamType: Option[MediaStreamType] = mappings.filter(
+      _.isInstanceOf[MediaStreamType]
+    ) match {
+      case a: Array[MediaStreamPlaylistParts] if a.isEmpty => None
+      case a: Array[MediaStreamPlaylistParts] if !a.isEmpty => Some(a.head.asInstanceOf[MediaStreamType])
+    }
 
     val mediaStreamIndependentSegments = mappings.filter {
       _.isInstanceOf[MediaStreamIndependentSegments]
@@ -106,7 +144,6 @@ private object Deserializer {
       } toMap
     }
 
-
     val mediaStreamFrameInfo = mappings.filter {
       _.isInstanceOf[MediaStreamFrameInfo]
     } match {
@@ -119,7 +156,13 @@ private object Deserializer {
       } toMap
     }
 
-    MasterStreamPlaylist(mediaStreamType, mediaStreamIndependentSegments, mediaStreamTypeInfo, mediaStreamInfo, mediaStreamFrameInfo)
+    MasterStreamPlaylist(
+      mediaStreamType,
+      mediaStreamIndependentSegments,
+      mediaStreamTypeInfo,
+      mediaStreamInfo,
+      mediaStreamFrameInfo
+    )
 
   }
 
@@ -161,37 +204,33 @@ private object Deserializer {
           data(StreamPlaylistSection.MediaStreamTypeInfo.DEFAULT))
 
       case line: String if StreamPlaylistSection.MediaStreamTypeInitializationVectorCompatibilityVersion.isSectionType(line) =>
-        val data = mapFields(line)
-        MediaStreamTypeInitializationVectorCompatibilityVersion(data(StreamPlaylistSection.MediaStreamTypeInitializationVectorCompatibilityVersion.XARGS))
+        MediaStreamTypeInitializationVectorCompatibilityVersion(
+          strip(line, StreamPlaylistSection.MediaStreamTypeInitializationVectorCompatibilityVersion.identifier))
 
       case line: String if StreamPlaylistSection.MediaStreamTargetDuration.isSectionType(line) =>
-        val data = mapFields(line)
-        MediaStreamTargetDuration(data(StreamPlaylistSection.MediaStreamTargetDuration.XARGS))
+        MediaStreamTargetDuration(strip(line, StreamPlaylistSection.MediaStreamTargetDuration.identifier))
 
       case line: String if StreamPlaylistSection.MediaStreamMediaSequence.isSectionType(line) =>
-        val data = mapFields(line)
-        MediaStreamMediaSequence(data(StreamPlaylistSection.MediaStreamMediaSequence.XARGS))
+        MediaStreamMediaSequence(strip(line, StreamPlaylistSection.MediaStreamMediaSequence.identifier))
 
       case line: String if StreamPlaylistSection.MediaStreamPlaylistType.isSectionType(line) =>
-        val data = mapFields(line)
-        MediaStreamPlaylistType(data(StreamPlaylistSection.MediaStreamPlaylistType.XARGS))
+        MediaStreamPlaylistType(strip(line, StreamPlaylistSection.MediaStreamPlaylistType.identifier))
 
       case line: String if StreamPlaylistSection.MediaStreamProgramDateTime.isSectionType(line) =>
-        val data = mapFields(line)
-        MediaStreamProgramDateTime(data(StreamPlaylistSection.MediaStreamProgramDateTime.XARGS))
+        MediaStreamProgramDateTime(strip(line, StreamPlaylistSection.MediaStreamProgramDateTime.identifier))
 
       case line: String if StreamPlaylistSection.MediaStreamPlaylistItem.isSectionType(line) =>
-        //        EXTINF:5,
-        //      #EXT-X-KEY:METHOD=AES-128,URI="https://qa-drm-api.svcs.eurosportplayer.com/media/5107ad82-b610-4921-8955-765df71a1f42/keys/0994962d-c1be-454d-9be2-8f723f7458a5",IV=0x9204AA77F72EE39DF47996C0175FF59F
-        //      asset_1800k/00000/asset_1800k_00001.ts
-
         val data = line.split("\n")
         val durationData = mapFields(data.head)
         if (data.length > 2) {
           val drmInfo = mapFields(data(1))
-          val asset = mapFields(data(data.length - 1).toString)
+          val asset = mapFields(data(data.length - 1))
           MediaStreamPlaylistItem(durationData(StreamPlaylistSection.MediaStreamPlaylistItem.XARGS),
-            None,
+            Option(MediaStreamPlaylistItemDRMInfo(
+              drmInfo(StreamPlaylistSection.MediaStreamPlaylistItemDRMInfo.METHOD),
+              drmInfo(StreamPlaylistSection.MediaStreamPlaylistItemDRMInfo.URI),
+              drmInfo(StreamPlaylistSection.MediaStreamPlaylistItemDRMInfo.IV))
+            ),
             asset(StreamPlaylistSection.MediaStreamPlaylistItem.XARGS))
         } else {
           val asset = mapFields(data(data.length - 1))
@@ -199,7 +238,8 @@ private object Deserializer {
             None,
             asset(StreamPlaylistSection.MediaStreamPlaylistItem.XARGS))
         }
-
+      case line: String if StreamPlaylistSection.MediaStreamEnd.isSectionType(line) =>
+        MediaStreamEnd()
 
       case _ => None
 

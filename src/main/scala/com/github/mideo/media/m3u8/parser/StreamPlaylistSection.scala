@@ -22,7 +22,10 @@ object StreamPlaylistSection {
 
   object MediaStreamType extends MediaStreamPlaylistSection {
     override def isSectionType(string: String): Boolean = {
-      string.toLowerCase.startsWith(identifier.toLowerCase) && !string.contains("-")
+      string.toLowerCase.startsWith(identifier.toLowerCase)&&
+        !string.contains("-") &&
+        !MediaStreamPlaylistItem.isSectionType(string)
+
     }
 
     override val identifier: String = "EXT"
