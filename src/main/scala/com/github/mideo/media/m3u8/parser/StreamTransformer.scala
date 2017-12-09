@@ -7,11 +7,13 @@ private[media] object StreamTransformer {
   import Serializer._
   import Deserializer._
 
-  val deserialize: String => MasterStreamPlaylist = mapData _ andThen buildMasterMediaStreamPlaylist
+  val deserializeMaster: String => MasterStreamPlaylist = mapData _ andThen buildMasterMediaStreamPlaylist
 
   val deserializeVOD: String => VodStreamPlaylist = mapData _ andThen buildVodMediaStreamPlaylist
 
-  val serialize: MasterStreamPlaylist => String = stringifyPlaylist _ andThen reduce
+  val serializeMaster: MasterStreamPlaylist => String = stringifyPlaylistMasterPlaylist _ andThen reduce
+
+  val serializeVOD: VodStreamPlaylist => String = stringifyPlaylistVodPlaylist _ andThen reduce
 }
 
 
@@ -82,7 +84,7 @@ private object Deserializer {
       case a: Array[MediaStreamPlaylistParts] if !a.isEmpty => Some(a.head.asInstanceOf[MediaStreamProgramDateTime])
     }
 
-    val mediaStreamPlaylistItem = mappings.filter {
+    val mediaStreamPlaylistItems = mappings.filter {
       _.isInstanceOf[MediaStreamPlaylistItem]
     } match {
       case a: Array[MediaStreamPlaylistParts] if a.isEmpty => None
@@ -103,7 +105,7 @@ private object Deserializer {
       mediaStreamMediaSequence,
       mediaStreamPlaylistType,
       mediaStreamProgramDateTime,
-      mediaStreamPlaylistItem,
+      mediaStreamPlaylistItems,
       mediaStreamEnd
     )
   }
@@ -259,15 +261,36 @@ private object Serializer {
     }
   }
 
-  def stringifyPlaylist(m3U8StreamPlaylist: MasterStreamPlaylist): List[String] = {
+  def stringifyPlaylistMasterPlaylist(masterStreamPlaylist: MasterStreamPlaylist): List[String] = {
+
+    val l = List(masterStreamPlaylist.mediaStreamType.getOrElse(None),
+      masterStreamPlaylist.mediaStreamIndependentSegments.getOrElse(None),
+      masterStreamPlaylist.mediaStreamTypeInfo.getOrElse(None),
+      masterStreamPlaylist.mediaStreamInfo,
+      masterStreamPlaylist.mediaStreamFrameInfo)
+    stringifyPlaylistPlaylist(l)
+  }
+
+  def stringifyPlaylistVodPlaylist(vodStreamPlaylist: VodStreamPlaylist): List[String] = {
+
+    val l = List(
+      vodStreamPlaylist.mediaStreamType.getOrElse(None),
+      vodStreamPlaylist.mediaStreamTypeInitializationVectorCompatibilityVersion.getOrElse(None),
+      vodStreamPlaylist.mediaStreamTargetDuration.getOrElse(None),
+      vodStreamPlaylist.mediaStreamMediaSequence.getOrElse(None),
+      vodStreamPlaylist.mediaStreamPlaylistType.getOrElse(None),
+      vodStreamPlaylist.mediaStreamProgramDateTime.getOrElse(None),
+      vodStreamPlaylist.mediaStreamPlaylistItems.getOrElse(None),
+      vodStreamPlaylist.mediaStreamEnd.getOrElse(None))
+    stringifyPlaylistPlaylist(l)
+  }
+
+  def stringifyPlaylistPlaylist(l:List[Any]):List[String] = {
     val arr = mutable.ArrayBuffer.empty[String]
-    List(m3U8StreamPlaylist.mediaStreamType.getOrElse(None),
-      m3U8StreamPlaylist.mediaStreamIndependentSegments.getOrElse(None),
-      m3U8StreamPlaylist.mediaStreamTypeInfo.getOrElse(None),
-      m3U8StreamPlaylist.mediaStreamInfo,
-      m3U8StreamPlaylist.mediaStreamFrameInfo) foreach {
-      case value: Map[_, _] => arr ++= value.values.toList map (_.toString)
-      case x: MediaStreamPlaylistParts => arr += x.toString
+    l foreach {
+      case value: Map[_, _] => arr ++= value.values.toList map (_.toString+"\n")
+      case value: List[_] => arr ++= value map (_.toString+"\n")
+      case x: MediaStreamPlaylistParts => arr += x.toString+"\n"
       case _ => //doNothing
     }
     arr.toList

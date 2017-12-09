@@ -91,14 +91,14 @@ case class MediaStreamPlaylistType(steamType: String) extends MediaStreamPlaylis
 }
 
 case class MediaStreamProgramDateTime(dateTime: String) extends MediaStreamPlaylistParts {
-  override def toString: String = s"#${StreamPlaylistSection.MediaStreamProgramDateTime.identifier}:$dateTime"
+  override def toString: String = s"#${StreamPlaylistSection.MediaStreamProgramDateTime.identifier}$dateTime"
 }
 
 case class MediaStreamPlaylistItemDRMInfo(method: String, uri: String, initializationVector: String) extends MediaStreamPlaylistParts {
 
   override def toString: String = s"#${StreamPlaylistSection.MediaStreamPlaylistItemDRMInfo.identifier}" +
-    s"${StreamPlaylistSection.MediaStreamPlaylistItemDRMInfo.METHOD}=$method" +
-    s"${StreamPlaylistSection.MediaStreamPlaylistItemDRMInfo.URI}=$uri" +
+    s"${StreamPlaylistSection.MediaStreamPlaylistItemDRMInfo.METHOD}=$method," +
+    s"""${StreamPlaylistSection.MediaStreamPlaylistItemDRMInfo.URI}="$uri",""" +
     s"${StreamPlaylistSection.MediaStreamPlaylistItemDRMInfo.IV}=$initializationVector"
 }
 

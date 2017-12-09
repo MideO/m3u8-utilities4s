@@ -7,7 +7,7 @@ import scala.io.Source
 
 class StreamPlaylistTest extends M3U8ParserSuite {
 
-  test("test StreamPlaylist") {
+  test("test MasterStreamPlaylist") {
     //Given
     val is =   getClass.getClassLoader.getResource("master.m3u8").openStream()
 
@@ -21,6 +21,25 @@ class StreamPlaylistTest extends M3U8ParserSuite {
     streamPlaylist.mediaStreamTypeInfo.isInstanceOf[Option[MediaStreamTypeInfo]] should be(true)
     streamPlaylist.mediaStreamInfo.isInstanceOf[Map[String, MediaStreamInfo]] should be(true)
     streamPlaylist.mediaStreamFrameInfo.isInstanceOf[Map[String, MediaStreamFrameInfo]] should be(true)
+  }
+
+  test("test VodStreamPlaylist") {
+    //Given
+    val is =   getClass.getClassLoader.getResource("asset.m3u8").openStream()
+
+    val data:String = Source.fromInputStream(is).getLines()reduce{(a, b) => s"$a\n$b"}
+
+    //When
+    val streamPlaylist: VodStreamPlaylist = VodStreamPlaylist(data)
+
+    streamPlaylist.mediaStreamType.isInstanceOf[Option[MediaStreamType]] should be(true)
+    streamPlaylist.mediaStreamTypeInitializationVectorCompatibilityVersion.isInstanceOf[Option[MediaStreamTypeInitializationVectorCompatibilityVersion]] should be(true)
+    streamPlaylist.mediaStreamTargetDuration.isInstanceOf[Option[MediaStreamTargetDuration]] should be(true)
+    streamPlaylist.mediaStreamMediaSequence.isInstanceOf[Option[MediaStreamMediaSequence]] should be(true)
+    streamPlaylist.mediaStreamPlaylistType.isInstanceOf[Option[MediaStreamPlaylistType]] should be(true)
+    streamPlaylist.mediaStreamProgramDateTime.isInstanceOf[Option[MediaStreamProgramDateTime]] should be(true)
+    streamPlaylist.mediaStreamPlaylistItems.isInstanceOf[Option[List[MediaStreamPlaylistItem]]] should be(true)
+    streamPlaylist.mediaStreamEnd.isInstanceOf[Option[MediaStreamEnd]]
   }
 
   test("test write") {

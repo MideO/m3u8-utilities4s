@@ -11,7 +11,7 @@ class StreamTransformerTest extends M3U8ParserSuite {
     val data:String = Source.fromInputStream(is).getLines()reduce {_+"\n"+_}
 
     //When
-    val streamPlaylist = StreamTransformer.deserialize(data)
+    val streamPlaylist = StreamTransformer.deserializeMaster(data)
 
     streamPlaylist.mediaStreamType.get.name should be("EXTM3U")
     streamPlaylist.mediaStreamIndependentSegments.get.toString should be("#EXT-X-INDEPENDENT-SEGMENTS")
@@ -49,14 +49,33 @@ class StreamTransformerTest extends M3U8ParserSuite {
 
     val data:String = Source.fromInputStream(is).getLines()reduce {_+"\n"+_}
 
-    val streamPlaylist = StreamTransformer.deserialize(data)
+    val streamPlaylist = StreamTransformer.deserializeMaster(data)
 
     //When
-    val result = StreamTransformer.serialize(streamPlaylist)
+    val result = StreamTransformer.serializeMaster(streamPlaylist)
 
     //Then
     data.split("\n") map {
       x => withClue(s"$x not in result") { result.contains(x) should be(true) }
+    }
+
+  }
+
+  test("testSerializeVod") {
+    //Given
+    val is =   getClass.getClassLoader.getResource("asset.m3u8").openStream()
+
+    val data:String = Source.fromInputStream(is).getLines()reduce {_+"\n"+_}
+
+    //When
+    val streamPlaylist = StreamTransformer.deserializeVOD(data)
+
+    //When
+    val result = StreamTransformer.serializeVOD(streamPlaylist)
+
+    //Then
+    data.split("\n") map {
+      x => withClue(s"$x not in $result") { result.contains(x) should be(true) }
     }
 
   }
@@ -68,7 +87,7 @@ class StreamTransformerTest extends M3U8ParserSuite {
     val data:String = Source.fromInputStream(is).getLines()reduce {_+"\n"+_}
 
     //When
-    val streamPlaylist = StreamTransformer.deserialize(data)
+    val streamPlaylist = StreamTransformer.deserializeMaster(data)
 
     streamPlaylist.mediaStreamType.get.name should be("EXTM3U")
     streamPlaylist.mediaStreamIndependentSegments should be(None)
@@ -77,16 +96,17 @@ class StreamTransformerTest extends M3U8ParserSuite {
     streamPlaylist.mediaStreamFrameInfo.isEmpty should be(true)
 
   }
+
   test("testSerialize with missing parts") {
     //Given
     val is =   getClass.getClassLoader.getResource("master_missing_parts.m3u8").openStream()
 
     val data:String = Source.fromInputStream(is).getLines()reduce {_+"\n"+_}
 
-    val streamPlaylist = StreamTransformer.deserialize(data)
+    val streamPlaylist = StreamTransformer.deserializeMaster(data)
 
     //When
-    val result = StreamTransformer.serialize(streamPlaylist)
+    val result = StreamTransformer.serializeMaster(streamPlaylist)
 
     //Then
     data.split("\n") map {
