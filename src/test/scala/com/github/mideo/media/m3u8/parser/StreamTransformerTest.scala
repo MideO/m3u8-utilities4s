@@ -15,7 +15,7 @@ class StreamTransformerTest extends M3U8ParserSuite {
 
     streamPlaylist.mediaStreamType.get.name should be("EXTM3U")
     streamPlaylist.mediaStreamIndependentSegments.get.toString should be("#EXT-X-INDEPENDENT-SEGMENTS")
-    streamPlaylist.mediaStreamTypeInfo.get.name should be("English")
+    streamPlaylist.mediaStreamTypeInfos.get.head.name should be("English")
     streamPlaylist.mediaStreamInfo.isEmpty should be(false)
     streamPlaylist.mediaStreamFrameInfo.isEmpty should be(false)
 
@@ -91,7 +91,7 @@ class StreamTransformerTest extends M3U8ParserSuite {
 
     streamPlaylist.mediaStreamType.get.name should be("EXTM3U")
     streamPlaylist.mediaStreamIndependentSegments should be(None)
-    streamPlaylist.mediaStreamTypeInfo.get.name should be("English")
+    streamPlaylist.mediaStreamTypeInfos.get.head.name should be("English")
     streamPlaylist.mediaStreamInfo.isEmpty should be(false)
     streamPlaylist.mediaStreamFrameInfo.isEmpty should be(true)
 

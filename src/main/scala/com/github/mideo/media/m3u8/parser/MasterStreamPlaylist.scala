@@ -10,7 +10,7 @@ object MasterStreamPlaylist {
 
 case class MasterStreamPlaylist(mediaStreamType: Option[MediaStreamType],
                                 mediaStreamIndependentSegments: Option[MediaStreamIndependentSegments],
-                                mediaStreamTypeInfo: Option[MediaStreamTypeInfo ],
+                                mediaStreamTypeInfos: Option[List[MediaStreamTypeInfo]],
                                 mediaStreamInfo: Map[String, MediaStreamInfo],
                                 mediaStreamFrameInfo: Map[String, MediaStreamFrameInfo]) extends StreamPlaylist {
 
@@ -19,12 +19,12 @@ case class MasterStreamPlaylist(mediaStreamType: Option[MediaStreamType],
     new MasterStreamPlaylist(
       m,
       mediaStreamIndependentSegments,
-      mediaStreamTypeInfo,
+      mediaStreamTypeInfos,
       mediaStreamInfo,
       mediaStreamFrameInfo)
   }
 
-  def withMediaStreamTypeInfo(m: Option[MediaStreamTypeInfo]): MasterStreamPlaylist = {
+  def withMediaStreamTypeInfo(m: Option[List[MediaStreamTypeInfo]]): MasterStreamPlaylist = {
     new MasterStreamPlaylist(
       mediaStreamType,
       mediaStreamIndependentSegments,
@@ -37,7 +37,7 @@ case class MasterStreamPlaylist(mediaStreamType: Option[MediaStreamType],
     new MasterStreamPlaylist(
       mediaStreamType,
       mediaStreamIndependentSegments,
-      mediaStreamTypeInfo,
+      mediaStreamTypeInfos,
       m,
       mediaStreamFrameInfo)
   }
@@ -46,7 +46,7 @@ case class MasterStreamPlaylist(mediaStreamType: Option[MediaStreamType],
     new MasterStreamPlaylist(
       mediaStreamType,
       mediaStreamIndependentSegments,
-      mediaStreamTypeInfo,
+      mediaStreamTypeInfos,
       mediaStreamInfo,
       m)
   }

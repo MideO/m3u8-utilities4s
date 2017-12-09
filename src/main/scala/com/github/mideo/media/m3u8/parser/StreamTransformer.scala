@@ -22,16 +22,16 @@ private object Deserializer {
     val listData = s.split(":(?=(?!//))")
     if (listData.length > 1) {
       val splat = {
-        if (listData.tail.head.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)|\n").length > 1) {
-          listData.tail.head.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)|\n")
+        if (listData.last.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)|\n").length > 1) {
+          listData.last.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)|\n")
         }
-        else listData.tail.head.split(",")
+        else listData.last.split(",")
       }
 
       return splat
         .map(text => text.split("="))
         .map(list =>
-          if (list.length > 1) list.head -> list.tail.head.replace("\"", "").replace("\n", "")
+          if (list.length > 1) list.head -> list.last.replace("\"", "").replace("\n", "")
           else "XARGS" -> list.head.replace("\"", "").replace("\n", "")
         ).toMap
     }
@@ -126,11 +126,11 @@ private object Deserializer {
       case a: Array[MediaStreamPlaylistParts] if !a.isEmpty => Some(a.head.asInstanceOf[MediaStreamIndependentSegments])
     }
 
-    val mediaStreamTypeInfo = mappings.filter {
+    val mediaStreamTypeInfos = mappings.filter {
       _.isInstanceOf[MediaStreamTypeInfo]
     } match {
       case a: Array[MediaStreamPlaylistParts] if a.isEmpty => None
-      case a: Array[MediaStreamPlaylistParts] if !a.isEmpty => Some(a.head.asInstanceOf[MediaStreamTypeInfo])
+      case a: Array[MediaStreamPlaylistParts] if !a.isEmpty => Some(a.toList.asInstanceOf[List[MediaStreamTypeInfo]])
     }
 
 
@@ -161,7 +161,7 @@ private object Deserializer {
     MasterStreamPlaylist(
       mediaStreamType,
       mediaStreamIndependentSegments,
-      mediaStreamTypeInfo,
+      mediaStreamTypeInfos,
       mediaStreamInfo,
       mediaStreamFrameInfo
     )
@@ -265,7 +265,7 @@ private object Serializer {
 
     val l = List(masterStreamPlaylist.mediaStreamType.getOrElse(None),
       masterStreamPlaylist.mediaStreamIndependentSegments.getOrElse(None),
-      masterStreamPlaylist.mediaStreamTypeInfo.getOrElse(None),
+      masterStreamPlaylist.mediaStreamTypeInfos.getOrElse(None),
       masterStreamPlaylist.mediaStreamInfo,
       masterStreamPlaylist.mediaStreamFrameInfo)
     stringifyPlaylistPlaylist(l)

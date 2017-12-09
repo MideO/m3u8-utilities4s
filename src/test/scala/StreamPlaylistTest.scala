@@ -18,7 +18,7 @@ class StreamPlaylistTest extends M3U8ParserSuite {
 
 
     streamPlaylist.mediaStreamType.isInstanceOf[Option[MediaStreamType]] should be(true)
-    streamPlaylist.mediaStreamTypeInfo.isInstanceOf[Option[MediaStreamTypeInfo]] should be(true)
+    streamPlaylist.mediaStreamTypeInfos.isInstanceOf[Option[List[MediaStreamTypeInfo]]] should be(true)
     streamPlaylist.mediaStreamInfo.isInstanceOf[Map[String, MediaStreamInfo]] should be(true)
     streamPlaylist.mediaStreamFrameInfo.isInstanceOf[Map[String, MediaStreamFrameInfo]] should be(true)
   }
@@ -88,7 +88,12 @@ class StreamPlaylistTest extends M3U8ParserSuite {
 
     val streamPlaylist = pl
       .withMediaStreamType(Option(MediaStreamType("foobar")))
-      .withMediaStreamTypeInfo(Option(MediaStreamTypeInfo("AUDIO","aac","fre","French","YES","YES")))
+      .withMediaStreamTypeInfo(Option(
+        List(
+          MediaStreamTypeInfo("AUDIO","aac","fre","French","YES","YES"),
+          MediaStreamTypeInfo("AUDIO","aac","eng","English","YES","YES")
+        )
+      ))
       .withMediaStreamInfo(pl.mediaStreamInfo.values map {
         it => it.bandWith -> MediaStreamInfo(
           it.bandWith,
@@ -101,7 +106,8 @@ class StreamPlaylistTest extends M3U8ParserSuite {
 
     //Then
     streamPlaylist.mediaStreamType.get.name should be("foobar")
-    streamPlaylist.mediaStreamTypeInfo.get.name should be("French")
+    streamPlaylist.mediaStreamTypeInfos.get.head.name should be("French")
+    streamPlaylist.mediaStreamTypeInfos.get.last.name should be("English")
     streamPlaylist.mediaStreamInfo("2100000").asset should be("french_asset_1800k.m3u8")
     streamPlaylist.mediaStreamFrameInfo("2222").bandWith should be("2222")
 
