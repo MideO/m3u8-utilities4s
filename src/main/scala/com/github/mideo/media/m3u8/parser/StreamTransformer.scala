@@ -124,14 +124,14 @@ private object Deserializer {
   }
 
   def mapData(data: String): Array[MediaStreamPlaylistParts] = {
-    data.split("#") map {
+    data.split("#(?=(?!EXT-X-KEY))") map {
       case line: String if StreamPlaylistSection.MediaStreamType.isSectionType(line) =>
         val data = mapFields(line)
         MediaStreamType(data(StreamPlaylistSection.MediaStreamType.XARGS))
 
       case line: String if StreamPlaylistSection.MediaStreamIndependentSegments.isSectionType(line) =>
-        val data = mapFields(line)
         MediaStreamIndependentSegments()
+
       case line: String if StreamPlaylistSection.MediaStreamFrameInfo.isSectionType(line) =>
         val data = mapFields(line)
         MediaStreamFrameInfo(data(StreamPlaylistSection.MediaStreamFrameInfo.BANDWIDTH),
@@ -139,6 +139,7 @@ private object Deserializer {
           data(StreamPlaylistSection.MediaStreamFrameInfo.RESOLUTION),
           data(StreamPlaylistSection.MediaStreamFrameInfo.URI)
         )
+
       case line: String if StreamPlaylistSection.MediaStreamInfo.isSectionType(line) =>
         val data = mapFields(line)
         MediaStreamInfo(
@@ -148,6 +149,7 @@ private object Deserializer {
           data(StreamPlaylistSection.MediaStreamInfo.CLOSED_CAPTIONS),
           data(StreamPlaylistSection.MediaStreamInfo.AUDIO),
           data(StreamPlaylistSection.MediaStreamInfo.XARGS))
+
       case line: String if StreamPlaylistSection.MediaStreamTypeInfo.isSectionType(line) =>
         val data = mapFields(line)
         MediaStreamTypeInfo(
@@ -161,21 +163,47 @@ private object Deserializer {
       case line: String if StreamPlaylistSection.MediaStreamTypeInitializationVectorCompatibilityVersion.isSectionType(line) =>
         val data = mapFields(line)
         MediaStreamTypeInitializationVectorCompatibilityVersion(data(StreamPlaylistSection.MediaStreamTypeInitializationVectorCompatibilityVersion.XARGS))
+
       case line: String if StreamPlaylistSection.MediaStreamTargetDuration.isSectionType(line) =>
         val data = mapFields(line)
         MediaStreamTargetDuration(data(StreamPlaylistSection.MediaStreamTargetDuration.XARGS))
+
       case line: String if StreamPlaylistSection.MediaStreamMediaSequence.isSectionType(line) =>
         val data = mapFields(line)
         MediaStreamMediaSequence(data(StreamPlaylistSection.MediaStreamMediaSequence.XARGS))
+
       case line: String if StreamPlaylistSection.MediaStreamPlaylistType.isSectionType(line) =>
         val data = mapFields(line)
         MediaStreamPlaylistType(data(StreamPlaylistSection.MediaStreamPlaylistType.XARGS))
+
       case line: String if StreamPlaylistSection.MediaStreamProgramDateTime.isSectionType(line) =>
         val data = mapFields(line)
         MediaStreamProgramDateTime(data(StreamPlaylistSection.MediaStreamProgramDateTime.XARGS))
+
+      case line: String if StreamPlaylistSection.MediaStreamPlaylistItem.isSectionType(line) =>
+        //        EXTINF:5,
+        //      #EXT-X-KEY:METHOD=AES-128,URI="https://qa-drm-api.svcs.eurosportplayer.com/media/5107ad82-b610-4921-8955-765df71a1f42/keys/0994962d-c1be-454d-9be2-8f723f7458a5",IV=0x9204AA77F72EE39DF47996C0175FF59F
+        //      asset_1800k/00000/asset_1800k_00001.ts
+
+        val data = line.split("\n")
+        val durationData = mapFields(data.head)
+        if (data.length > 2) {
+          val drmInfo = mapFields(data(1))
+          val asset = mapFields(data(data.length - 1).toString)
+          MediaStreamPlaylistItem(durationData(StreamPlaylistSection.MediaStreamPlaylistItem.XARGS),
+            None,
+            asset(StreamPlaylistSection.MediaStreamPlaylistItem.XARGS))
+        } else {
+          val asset = mapFields(data(data.length - 1))
+          MediaStreamPlaylistItem(durationData(StreamPlaylistSection.MediaStreamPlaylistItem.XARGS),
+            None,
+            asset(StreamPlaylistSection.MediaStreamPlaylistItem.XARGS))
+        }
+
+
       case _ => None
 
-     } filter {
+    } filter {
       x => x != None
     } map {
       _.asInstanceOf[MediaStreamPlaylistParts]
