@@ -48,6 +48,7 @@ private[parser] object Serializers {
   implicit class PimpedMediaPlaylist[T <: StreamPlaylist](t: T) {
     def toMasterPlaylistString: String =  (stringifyPlaylistMasterPlaylist _ andThen reduce).apply(t.asInstanceOf[MasterStreamPlaylist])
     def toVodStreamPlaylistString: String = (stringifyPlaylistVodPlaylist _ andThen reduce).apply(t.asInstanceOf[VodStreamPlaylist])
+
   }
 
 }

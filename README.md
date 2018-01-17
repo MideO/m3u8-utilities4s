@@ -67,6 +67,7 @@ asset_3500k.m3u8
 import com.github.mideo.media.m3u8.parser._
 
 import scala.io.Source
+import com.github.mideo.media.m3u8.parser._
 
 
 val is =   getClass.getClassLoader.getResource("master.m3u8").openStream()
@@ -74,7 +75,7 @@ val is =   getClass.getClassLoader.getResource("master.m3u8").openStream()
 val data:String = Source.fromInputStream(is).getLines()reduce{_+""+_}
 
 //create domain object
-val streamPlaylist = StreamTransformer.deserializeMaster(data)
+val streamPlaylist = MasterStreamPlaylist(data)
 streamPlaylist.mediaStreamType.name
 streamPlaylist.mediaStreamTypeInfo.get("210000")
 
@@ -94,7 +95,7 @@ val updated: MasterStreamPlaylist = streamPlaylist
 
 
 //serialise
-val newContent = updated.serializeMaster
+val newContent = updated.toPlaylistString
 
 //or saveToFile
 
@@ -171,5 +172,5 @@ asset_1800k/00001/asset_1800k_00004.ts
 ```scala
 //Vod
 val isVod = Source.fromFile("vodAsset.m3u8")
-val streamPlaylist = StreamTransformer.deserializeVOD(data)
+val streamPlaylist = VodStreamPlaylist(data)
 ```

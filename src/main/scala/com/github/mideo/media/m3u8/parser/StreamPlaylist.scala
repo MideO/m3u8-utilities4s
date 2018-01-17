@@ -6,10 +6,10 @@ import java.nio.file.{Files, Paths}
 trait StreamPlaylist {
   val mediaStreamType: Option[MediaStreamType]
 
-  def write: String
+  def toPlaylistString: String
 
   def saveToFile(fileName:String): Unit = {
-    Files.write(Paths.get(fileName), write.getBytes())
+    Files.write(Paths.get(fileName), toPlaylistString.getBytes())
   }
 
 }

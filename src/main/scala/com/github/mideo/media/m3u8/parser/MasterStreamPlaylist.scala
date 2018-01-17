@@ -52,5 +52,5 @@ case class MasterStreamPlaylist(mediaStreamType: Option[MediaStreamType],
       m)
   }
 
-  override def write: String = this.toMasterPlaylistString
+  override def toPlaylistString: String = this.toMasterPlaylistString
 }

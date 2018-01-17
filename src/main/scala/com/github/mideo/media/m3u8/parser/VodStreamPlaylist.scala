@@ -15,5 +15,5 @@ case class VodStreamPlaylist(mediaStreamType: Option[MediaStreamType],
                              mediaStreamProgramDateTime: Option[MediaStreamProgramDateTime],
                              mediaStreamPlaylistItems: Option[List[MediaStreamPlaylistItem]],
                              mediaStreamEnd: Option[MediaStreamEnd]) extends StreamPlaylist {
-  override def write: String = this.toVodStreamPlaylistString
+  override def toPlaylistString: String = this.toVodStreamPlaylistString
 }

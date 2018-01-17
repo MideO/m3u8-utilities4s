@@ -1,6 +1,21 @@
 import java.nio.file.{Files, Paths}
 
-import com.github.mideo.media.m3u8.parser._
+import com.github.mideo.media.m3u8.parser.{
+  M3U8ParserSuite,
+  MasterStreamPlaylist,
+  VodStreamPlaylist,
+  MediaStreamType,
+  MediaStreamTypeInfo,
+  MediaStreamInfo,
+  MediaStreamFrameInfo,
+  MediaStreamTypeInitializationVectorCompatibilityVersion,
+  MediaStreamTargetDuration,
+  MediaStreamMediaSequence,
+  MediaStreamPlaylistType,
+  MediaStreamProgramDateTime,
+  MediaStreamPlaylistItem,
+  MediaStreamEnd
+}
 
 import scala.io.Source
 
@@ -52,7 +67,7 @@ class StreamPlaylistTest extends M3U8ParserSuite {
     val streamPlaylist = MasterStreamPlaylist(data)
 
     //Then
-    streamPlaylist.write.isInstanceOf[String] should be(true)
+    streamPlaylist.toPlaylistString.isInstanceOf[String] should be(true)
 
   }
 

@@ -25,7 +25,7 @@ private[parser] object Deserializers {
     s.replace(subString, "").replace("\n", "").replace("\"", "")
   }
 
-  private def buildVodMediaStreamPlaylist(mappings: Array[MediaStreamPlaylistParts]): VodStreamPlaylist = {
+  private def toVodMediaStreamPlaylist(mappings: Array[MediaStreamPlaylistParts]): VodStreamPlaylist = {
     val mediaStreamType: Option[MediaStreamType] = mappings.filter(
       _.isInstanceOf[MediaStreamType]
     ) match {
@@ -94,7 +94,7 @@ private[parser] object Deserializers {
     )
   }
 
-  private def buildMasterMediaStreamPlaylist(mappings: Array[MediaStreamPlaylistParts]): MasterStreamPlaylist = {
+  private def toMasterMediaStreamPlaylist(mappings: Array[MediaStreamPlaylistParts]): MasterStreamPlaylist = {
 
     val mediaStreamType: Option[MediaStreamType] = mappings.filter(
       _.isInstanceOf[MediaStreamType]
@@ -238,8 +238,8 @@ private[parser] object Deserializers {
 
 
   implicit class PimpedMediaPlaylistString(val s: String) {
-    def toVodStreamPlaylist: VodStreamPlaylist =  (mapData _ andThen buildVodMediaStreamPlaylist).apply(s)
-    def toMasterPlaylist: MasterStreamPlaylist = (mapData _ andThen buildMasterMediaStreamPlaylist).apply(s)
+    def toVodStreamPlaylist: VodStreamPlaylist =  (mapData _ andThen toVodMediaStreamPlaylist).apply(s)
+    def toMasterPlaylist: MasterStreamPlaylist = (mapData _ andThen toMasterMediaStreamPlaylist).apply(s)
   }
 
 }
