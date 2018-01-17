@@ -1,9 +1,10 @@
 package com.github.mideo.media.m3u8.parser
-
+import Deserializers._
+import Serializers._
 
 object MasterStreamPlaylist {
   def apply(data: String): MasterStreamPlaylist = {
-    StreamTransformer.deserializeMaster(data)
+    data.toMasterPlaylist
   }
 }
 
@@ -51,5 +52,5 @@ case class MasterStreamPlaylist(mediaStreamType: Option[MediaStreamType],
       m)
   }
 
-  override def write: String = StreamTransformer.serializeMaster(this)
+  override def write: String = this.toMasterPlaylistString
 }
