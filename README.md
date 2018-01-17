@@ -171,6 +171,6 @@ asset_1800k/00001/asset_1800k_00004.ts
 ```
 ```scala
 //Vod
-val isVod = Source.fromFile("vodAsset.m3u8")
-val streamPlaylist = VodStreamPlaylist(data)
+val vodDataFile = Source.fromFile("vodAsset.m3u8")
+val streamPlaylist = VodStreamPlaylist(vodDataFile)
 ```
