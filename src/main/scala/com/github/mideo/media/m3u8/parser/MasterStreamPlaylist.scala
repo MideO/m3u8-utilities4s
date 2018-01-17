@@ -1,10 +1,22 @@
 package com.github.mideo.media.m3u8.parser
+
+import java.io.InputStream
+
 import Deserializers._
 import Serializers._
+
+import scala.io.Source
 
 object MasterStreamPlaylist {
   def apply(data: String): MasterStreamPlaylist = {
     data.toMasterPlaylist
+  }
+
+  def apply(data: InputStream): MasterStreamPlaylist = {
+    Source.fromInputStream(data)
+      .getLines() reduce {
+      _ + "\n" + _
+    } toMasterPlaylist
   }
 }
 

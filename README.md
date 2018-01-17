@@ -2,11 +2,14 @@
 [![Build Status](https://travis-ci.org/MideO/m3u8-parser.svg?branch=master)](https://travis-ci.org/MideO/m3u8-parser)
 
 library to help:
- * understand m3u8 playlist by de-serialising into a scala object
- * differentiate between a master playlist and asset playlist (wip)
- * modify a playlist and serialise from scala objects to playlist file content (wip)
+ * De-serialising into a scala domain object
+ * modify a master playlist and serialise from scala domain objects to playlist file
+ * modify a vod playlist and serialise from scala domain objects to playlist file
+ * modify a live playlist and serialise from scala domain objects to playlist file (wip)
     
-    
+##### Docs?
+  See Functional tests: [StreamPlaylistTest.scala](src/test/scala/StreamPlaylistTest.scala)
+  
 #### implemented m3u8 parts, so far
 ```scala
 //master m3u8
@@ -72,11 +75,8 @@ import com.github.mideo.media.m3u8.parser._
 
 val is =   getClass.getClassLoader.getResource("master.m3u8").openStream()
 
-val data:String = Source.fromInputStream(is).getLines()reduce{_+""+_}
-
 //create domain object
-val streamPlaylist = MasterStreamPlaylist(data)
-streamPlaylist.mediaStreamType.name
+val streamPlaylist = MasterStreamPlaylist(is)
 streamPlaylist.mediaStreamTypeInfo.get("210000")
 
 //edit
