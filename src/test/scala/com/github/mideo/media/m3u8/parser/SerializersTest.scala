@@ -30,7 +30,7 @@ class SerializersTest extends M3U8ParserSuite {
 
   test("testSerializeVod") {
     //Given
-    val is = getClass.getClassLoader.getResource("asset.m3u8").openStream()
+    val is = getClass.getClassLoader.getResource("vod_asset_1800k.m3u8").openStream()
 
     val data: String = Source.fromInputStream(is).getLines() reduce {
       _ + "\n" + _

@@ -54,7 +54,7 @@ class StreamPlaylistTest extends M3U8ParserSuite {
 
   test("test VodStreamPlaylist from String") {
     //Given
-    val is = getClass.getClassLoader.getResource("asset.m3u8").openStream()
+    val is = getClass.getClassLoader.getResource("vod_asset_1800k.m3u8").openStream()
 
     val data: String = Source.fromInputStream(is).getLines() reduce { (a, b) => s"$a\n$b" }
 
@@ -73,7 +73,7 @@ class StreamPlaylistTest extends M3U8ParserSuite {
 
   test("test VodStreamPlaylist from InputStream") {
     //Given
-    val is = getClass.getClassLoader.getResource("asset.m3u8").openStream()
+    val is = getClass.getClassLoader.getResource("vod_asset_1800k.m3u8").openStream()
 
     //When
     val streamPlaylist: VodStreamPlaylist = VodStreamPlaylist(is)
@@ -149,7 +149,7 @@ class StreamPlaylistTest extends M3U8ParserSuite {
     streamPlaylist.mediaStreamType.get.name should be("foobar")
     streamPlaylist.mediaStreamTypeInfos.get.head.name should be("French")
     streamPlaylist.mediaStreamTypeInfos.get.last.name should be("English")
-    streamPlaylist.mediaStreamInfo("2100000").asset should be("french_asset_1800k.m3u8")
+    streamPlaylist.mediaStreamInfo("2100000").asset should be("vod_french_asset_1800k.m3u8")
     streamPlaylist.mediaStreamFrameInfo("2222").bandWith should be("2222")
 
   }

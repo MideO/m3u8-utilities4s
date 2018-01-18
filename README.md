@@ -125,7 +125,7 @@ french_asset_3500k.m3u8
 #EXT-X-I-FRAME-STREAM-INF:BANDWIDTH=190000,CODECS="avc1.4d001f",RESOLUTION=960x540,URI="asset_2500k_I-Frame.m3u8"
 ```
 
-vodAsset.m3u8
+vod_asset_1800k.m3u8
 ```bash
 #EXTM3U
 #EXT-X-VERSION:4
@@ -171,6 +171,6 @@ asset_1800k/00001/asset_1800k_00004.ts
 ```
 ```scala
 //Vod
-val vodDataFile = Source.fromFile("vodAsset.m3u8")
+val vodDataFile = Source.fromFile("vod_asset_1800k.m3u8")
 val streamPlaylist = VodStreamPlaylist(vodDataFile)
 ```
