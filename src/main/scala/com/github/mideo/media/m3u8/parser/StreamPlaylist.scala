@@ -8,8 +8,10 @@ trait StreamPlaylist {
 
   def toPlaylistString: String
 
-  def saveToFile(fileName:String): Unit = {
+  def saveToFile(fileName: String): Unit = {
     Files.write(Paths.get(fileName), toPlaylistString.getBytes())
   }
 
 }
+
+

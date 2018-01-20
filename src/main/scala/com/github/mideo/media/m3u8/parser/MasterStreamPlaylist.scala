@@ -8,7 +8,28 @@ import Serializers._
 import scala.io.Source
 
 object MasterStreamPlaylist {
-  def apply(data: String): MasterStreamPlaylist = {
+  private implicit class PimpedMasterStreamPlaylist[K](s: List[K]) {
+    def extractMediaStreamType: Option[MediaStreamType] = s collectFirst { case c if c.isInstanceOf[MediaStreamType] => c.asInstanceOf[MediaStreamType] }
+
+    def extractMediaStreamIndependentSegments: Option[MediaStreamIndependentSegments] = s collectFirst { case c if c.isInstanceOf[MediaStreamIndependentSegments] => c.asInstanceOf[MediaStreamIndependentSegments] }
+
+    def extractMediaStreamTypeInfo: Option[List[MediaStreamTypeInfo]] = Option(s collect { case c if c.isInstanceOf[MediaStreamTypeInfo] => c.asInstanceOf[MediaStreamTypeInfo] })
+
+    def extractMediaStreamInfoToMap: Map[String, MediaStreamInfo] = s collect {
+      case c if c.isInstanceOf[MediaStreamInfo] =>
+        val l = c.asInstanceOf[MediaStreamInfo]
+        l.bandWith -> l
+    } toMap
+
+    def extractMediaStreamFrameInfoToMap: Map[String, MediaStreamFrameInfo] = s collect {
+      case c if c.isInstanceOf[MediaStreamFrameInfo] =>
+        val l = c.asInstanceOf[MediaStreamFrameInfo]
+        l.bandWith -> l
+    } toMap
+  }
+
+
+  def apply(data: String = ""): MasterStreamPlaylist = {
     data.toMasterPlaylist
   }
 
@@ -18,6 +39,15 @@ object MasterStreamPlaylist {
       _ + "\n" + _
     } toMasterPlaylist
   }
+
+  def apply(mappings: List[MediaStreamPlaylistParts]): MasterStreamPlaylist = MasterStreamPlaylist(
+    mappings extractMediaStreamType,
+    mappings extractMediaStreamIndependentSegments,
+    mappings extractMediaStreamTypeInfo,
+    mappings extractMediaStreamInfoToMap,
+    mappings extractMediaStreamFrameInfoToMap
+  )
+
 }
 
 
@@ -29,7 +59,7 @@ case class MasterStreamPlaylist(mediaStreamType: Option[MediaStreamType],
 
 
   def withMediaStreamType(m: Option[MediaStreamType]): MasterStreamPlaylist = {
-    new MasterStreamPlaylist(
+    MasterStreamPlaylist(
       m,
       mediaStreamIndependentSegments,
       mediaStreamTypeInfos,
@@ -38,7 +68,7 @@ case class MasterStreamPlaylist(mediaStreamType: Option[MediaStreamType],
   }
 
   def withMediaStreamTypeInfo(m: Option[List[MediaStreamTypeInfo]]): MasterStreamPlaylist = {
-    new MasterStreamPlaylist(
+    MasterStreamPlaylist(
       mediaStreamType,
       mediaStreamIndependentSegments,
       m,
@@ -47,7 +77,7 @@ case class MasterStreamPlaylist(mediaStreamType: Option[MediaStreamType],
   }
 
   def withMediaStreamInfo(m: Map[String, MediaStreamInfo]): MasterStreamPlaylist = {
-    new MasterStreamPlaylist(
+    MasterStreamPlaylist(
       mediaStreamType,
       mediaStreamIndependentSegments,
       mediaStreamTypeInfos,
@@ -56,7 +86,7 @@ case class MasterStreamPlaylist(mediaStreamType: Option[MediaStreamType],
   }
 
   def withMediaStreamFrameInfo(m: Map[String, MediaStreamFrameInfo]): MasterStreamPlaylist = {
-    new MasterStreamPlaylist(
+    MasterStreamPlaylist(
       mediaStreamType,
       mediaStreamIndependentSegments,
       mediaStreamTypeInfos,

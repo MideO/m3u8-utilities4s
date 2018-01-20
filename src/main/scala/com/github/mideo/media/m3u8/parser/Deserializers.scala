@@ -21,139 +21,10 @@ private[parser] object Deserializers {
     Map("XARGS" -> stripSpaces(listData.head))
   }
 
-  private def stripSpaces(s: String, subString: String = ""): String = {
-    s.replace(subString, "").replace("\n", "").replace("\"", "")
-  }
-
-  private def toVodMediaStreamPlaylist(mappings: Array[MediaStreamPlaylistParts]): VodStreamPlaylist = {
-    val mediaStreamType: Option[MediaStreamType] = mappings.filter(
-      _.isInstanceOf[MediaStreamType]
-    ) match {
-      case a: Array[MediaStreamPlaylistParts] if a.isEmpty => None
-      case a: Array[MediaStreamPlaylistParts] if !a.isEmpty => Some(a.head.asInstanceOf[MediaStreamType])
-    }
-
-    val mediaStreamTypeInitializationVectorCompatibilityVersion: Option[MediaStreamTypeInitializationVectorCompatibilityVersion] = mappings.filter(
-      _.isInstanceOf[MediaStreamTypeInitializationVectorCompatibilityVersion]
-    ) match {
-      case a: Array[MediaStreamPlaylistParts] if a.isEmpty => None
-      case a: Array[MediaStreamPlaylistParts] if !a.isEmpty => Some(a.head.asInstanceOf[MediaStreamTypeInitializationVectorCompatibilityVersion])
-    }
-
-    val mediaStreamTargetDuration: Option[MediaStreamTargetDuration] = mappings.filter(
-      _.isInstanceOf[MediaStreamTargetDuration]
-    ) match {
-      case a: Array[MediaStreamPlaylistParts] if a.isEmpty => None
-      case a: Array[MediaStreamPlaylistParts] if !a.isEmpty => Some(a.head.asInstanceOf[MediaStreamTargetDuration])
-    }
-
-    val mediaStreamMediaSequence: Option[MediaStreamMediaSequence] = mappings.filter(
-      _.isInstanceOf[MediaStreamMediaSequence]
-    ) match {
-      case a: Array[MediaStreamPlaylistParts] if a.isEmpty => None
-      case a: Array[MediaStreamPlaylistParts] if !a.isEmpty => Some(a.head.asInstanceOf[MediaStreamMediaSequence])
-    }
-
-    val mediaStreamPlaylistType: Option[MediaStreamPlaylistType] = mappings.filter(
-      _.isInstanceOf[MediaStreamPlaylistType]
-    ) match {
-      case a: Array[MediaStreamPlaylistParts] if a.isEmpty => None
-      case a: Array[MediaStreamPlaylistParts] if !a.isEmpty => Some(a.head.asInstanceOf[MediaStreamPlaylistType])
-    }
-
-    val mediaStreamProgramDateTime: Option[MediaStreamProgramDateTime] = mappings.filter(
-      _.isInstanceOf[MediaStreamProgramDateTime]
-    ) match {
-      case a: Array[MediaStreamPlaylistParts] if a.isEmpty => None
-      case a: Array[MediaStreamPlaylistParts] if !a.isEmpty => Some(a.head.asInstanceOf[MediaStreamProgramDateTime])
-    }
-
-    val mediaStreamPlaylistItems = mappings.filter {
-      _.isInstanceOf[MediaStreamPlaylistItem]
-    } match {
-      case a: Array[MediaStreamPlaylistParts] if a.isEmpty => None
-      case a: Array[MediaStreamPlaylistParts] if !a.isEmpty => Some(a.toList.asInstanceOf[List[MediaStreamPlaylistItem]])
-    }
-
-    val mediaStreamEnd = mappings.filter {
-      _.isInstanceOf[MediaStreamEnd]
-    } match {
-      case a: Array[MediaStreamPlaylistParts] if a.isEmpty => None
-      case a: Array[MediaStreamPlaylistParts] if !a.isEmpty => Some(a.head.asInstanceOf[MediaStreamEnd])
-    }
-
-    VodStreamPlaylist(
-      mediaStreamType,
-      mediaStreamTypeInitializationVectorCompatibilityVersion,
-      mediaStreamTargetDuration,
-      mediaStreamMediaSequence,
-      mediaStreamPlaylistType,
-      mediaStreamProgramDateTime,
-      mediaStreamPlaylistItems,
-      mediaStreamEnd
-    )
-  }
-
-  private def toMasterMediaStreamPlaylist(mappings: Array[MediaStreamPlaylistParts]): MasterStreamPlaylist = {
-
-    val mediaStreamType: Option[MediaStreamType] = mappings.filter(
-      _.isInstanceOf[MediaStreamType]
-    ) match {
-      case a: Array[MediaStreamPlaylistParts] if a.isEmpty => None
-      case a: Array[MediaStreamPlaylistParts] if !a.isEmpty => Some(a.head.asInstanceOf[MediaStreamType])
-    }
-
-    val mediaStreamIndependentSegments = mappings.filter {
-      _.isInstanceOf[MediaStreamIndependentSegments]
-    } match {
-      case a: Array[MediaStreamPlaylistParts] if a.isEmpty => None
-      case a: Array[MediaStreamPlaylistParts] if !a.isEmpty => Some(a.head.asInstanceOf[MediaStreamIndependentSegments])
-    }
-
-    val mediaStreamTypeInfos = mappings.filter {
-      _.isInstanceOf[MediaStreamTypeInfo]
-    } match {
-      case a: Array[MediaStreamPlaylistParts] if a.isEmpty => None
-      case a: Array[MediaStreamPlaylistParts] if !a.isEmpty => Some(a.toList.asInstanceOf[List[MediaStreamTypeInfo]])
-    }
-
-
-    val mediaStreamInfo = mappings.filter {
-      _.isInstanceOf[MediaStreamInfo]
-    } match {
-      case a: Array[MediaStreamPlaylistParts] if a.isEmpty => Map.empty[String, MediaStreamInfo]
-      case a: Array[MediaStreamPlaylistParts] if !a.isEmpty => a map {
-        it => {
-          val l = it.asInstanceOf[MediaStreamInfo]
-          l.bandWith -> l
-        }
-      } toMap
-    }
-
-    val mediaStreamFrameInfo = mappings.filter {
-      _.isInstanceOf[MediaStreamFrameInfo]
-    } match {
-      case a: Array[MediaStreamPlaylistParts] if a.isEmpty => Map.empty[String, MediaStreamFrameInfo]
-      case a: Array[MediaStreamPlaylistParts] if !a.isEmpty => a map {
-        it => {
-          val l = it.asInstanceOf[MediaStreamFrameInfo]
-          l.bandWith -> l
-        }
-      } toMap
-    }
-
-    MasterStreamPlaylist(
-      mediaStreamType,
-      mediaStreamIndependentSegments,
-      mediaStreamTypeInfos,
-      mediaStreamInfo,
-      mediaStreamFrameInfo
-    )
-
-  }
-
-  private def mapData(data: String): Array[MediaStreamPlaylistParts] = {
-    data.split("#(?=(?!EXT-X-KEY))") map {
+  private def stripSpaces(s: String, subString: String = ""): String = s.replace(subString, "").replace("\n", "").replace("\"", "")
+5
+  private def mapData(data: String): List[MediaStreamPlaylistParts] = {
+    data.split("#(?=(?!EXT-X-KEY))").toList map {
       case line: String if StreamPlaylistSection.MediaStreamType.isSectionType(line) =>
         val data = mapFields(line)
         MediaStreamType(data(StreamPlaylistSection.MediaStreamType.XARGS))
@@ -229,17 +100,16 @@ private[parser] object Deserializers {
 
       case _ => None
 
-    } filter {
-      x => x != None
-    } map {
-      _.asInstanceOf[MediaStreamPlaylistParts]
+    } collect {
+      case x if x != None => x.asInstanceOf[MediaStreamPlaylistParts]
     }
   }
 
 
   implicit class PimpedMediaPlaylistString(val s: String) {
-    def toVodStreamPlaylist: VodStreamPlaylist =  (mapData _ andThen toVodMediaStreamPlaylist).apply(s)
-    def toMasterPlaylist: MasterStreamPlaylist = (mapData _ andThen toMasterMediaStreamPlaylist).apply(s)
+    def toVodStreamPlaylist: VodStreamPlaylist = VodStreamPlaylist(mapData(s))
+
+    def toMasterPlaylist: MasterStreamPlaylist = MasterStreamPlaylist(mapData(s))
   }
 
 }

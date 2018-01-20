@@ -1,6 +1,8 @@
 # m3u8-parser - (wip)
 [![Build Status](https://travis-ci.org/MideO/m3u8-parser.svg?branch=master)](https://travis-ci.org/MideO/m3u8-parser)
 
+See [Apple HLS Guide](https://developer.apple.com/library/content/technotes/tn2288/_index.html)
+
 library to help:
  * De-serialising into a scala domain object
  * modify a master playlist and serialise from scala domain objects to playlist file

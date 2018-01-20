@@ -2,7 +2,14 @@ package com.github.mideo.media.m3u8.parser
 
 trait MediaStreamPlaylistParts {
   def toString: String
+
+  implicit class  PimpedMediaStreamPlaylistParts(s:Array[MediaStreamPlaylistParts]) {
+    def zollect[T] =  s collectFirst {
+      case c if c.isInstanceOf[MediaStreamType] => c.asInstanceOf[T]
+    }
+  }
 }
+
 
 sealed trait StreamInfo {
   val bandWith: String
