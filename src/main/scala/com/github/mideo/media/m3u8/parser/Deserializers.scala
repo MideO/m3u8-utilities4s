@@ -107,9 +107,10 @@ private[parser] object Deserializers {
 
 
   implicit class PimpedMediaPlaylistString(val s: String) {
-    def toVodStreamPlaylist: VodStreamPlaylist = VodStreamPlaylist(mapData(s))
+    def toVodStreamPlaylist: VodStreamPlaylist = (mapData _ andThen VodStreamPlaylist.apply) (s)
 
-    def toMasterPlaylist: MasterStreamPlaylist = MasterStreamPlaylist(mapData(s))
+
+    def toMasterPlaylist: MasterStreamPlaylist = (mapData _ andThen MasterStreamPlaylist.apply) (s)
   }
 
 }
