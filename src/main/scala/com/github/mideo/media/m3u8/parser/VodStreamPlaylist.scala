@@ -10,7 +10,7 @@ import Serializers._
 
 object VodStreamPlaylist {
 
-  private implicit class PimpedVodStreamPlaylist[K](s: List[K]) {
+  private implicit class PimpedListOfMediaStreamPlaylistParts(s: List[MediaStreamPlaylistParts]) {
     def extractMediaStreamType: Option[MediaStreamType] = s collectFirst { case c if c.isInstanceOf[MediaStreamType] => c.asInstanceOf[MediaStreamType] }
 
     def extractMediaStreamTypeInitializationVectorCompatibilityVersion: Option[MediaStreamTypeInitializationVectorCompatibilityVersion] = s collectFirst { case c if c.isInstanceOf[MediaStreamTypeInitializationVectorCompatibilityVersion] => c.asInstanceOf[MediaStreamTypeInitializationVectorCompatibilityVersion] }

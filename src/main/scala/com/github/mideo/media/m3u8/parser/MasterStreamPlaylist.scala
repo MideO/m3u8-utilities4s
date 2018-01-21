@@ -8,7 +8,7 @@ import Serializers._
 import scala.io.Source
 
 object MasterStreamPlaylist {
-  private implicit class PimpedMasterStreamPlaylist[K](s: List[K]) {
+  private implicit class PimpedListOfMediaStreamPlaylistParts(s: List[MediaStreamPlaylistParts]) {
     def extractMediaStreamType: Option[MediaStreamType] = s collectFirst { case c if c.isInstanceOf[MediaStreamType] => c.asInstanceOf[MediaStreamType] }
 
     def extractMediaStreamIndependentSegments: Option[MediaStreamIndependentSegments] = s collectFirst { case c if c.isInstanceOf[MediaStreamIndependentSegments] => c.asInstanceOf[MediaStreamIndependentSegments] }

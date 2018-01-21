@@ -22,7 +22,7 @@ private[parser] object Deserializers {
   }
 
   private def stripSpaces(s: String, subString: String = ""): String = s.replace(subString, "").replace("\n", "").replace("\"", "")
-5
+
   private def mapData(data: String): List[MediaStreamPlaylistParts] = {
     data.split("#(?=(?!EXT-X-KEY))").toList map {
       case line: String if StreamPlaylistSection.MediaStreamType.isSectionType(line) =>
