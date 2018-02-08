@@ -80,8 +80,8 @@ private[parser] object Deserializers {
         val data = line.split("\n")
         val durationData = mapFields(data.head)
         if (data.length > 2) {
-          val drmInfo = mapFields(data(1))
-          val asset = mapFields(data(data.length - 1))
+          val drmInfo = mapFields(data.find(StreamPlaylistSection.MediaStreamPlaylistTransportStreamDRMInfo.isSectionType).get)
+          val asset = mapFields(data.find(_.endsWith(".ts")).get)
           MediaStreamPlaylistTransportStream(durationData(StreamPlaylistSection.MediaStreamPlaylistTransportStream.XARGS),
             Option(MediaStreamPlaylistTransportStreamDRMInfo(
               drmInfo(StreamPlaylistSection.MediaStreamPlaylistTransportStreamDRMInfo.METHOD),
@@ -109,6 +109,7 @@ private[parser] object Deserializers {
   implicit class PimpedMediaPlaylistString(val s: String) {
     def toVodStreamPlaylist: VodStreamPlaylist = (mapData _ andThen VodStreamPlaylist.apply) (s)
 
+    def toLiveStreamPlaylist: LiveStreamPlaylist = (mapData _ andThen LiveStreamPlaylist.apply) (s)
 
     def toMasterPlaylist: MasterStreamPlaylist = (mapData _ andThen MasterStreamPlaylist.apply) (s)
   }

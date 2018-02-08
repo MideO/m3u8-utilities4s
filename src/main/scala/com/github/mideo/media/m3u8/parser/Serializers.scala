@@ -34,6 +34,18 @@ private[parser] object Serializers {
     stringifyPlaylistPlaylist(l)
   }
 
+  private def stringifyPlaylistLivePlaylist(liveStreamPlaylist: LiveStreamPlaylist): List[String] = {
+
+    val l = List(
+      liveStreamPlaylist.mediaStreamType.getOrElse(None),
+      liveStreamPlaylist.mediaStreamTypeInitializationVectorCompatibilityVersion.getOrElse(None),
+      liveStreamPlaylist.mediaStreamTargetDuration.getOrElse(None),
+      liveStreamPlaylist.mediaStreamMediaSequence.getOrElse(None),
+      liveStreamPlaylist.mediaStreamProgramDateTime.getOrElse(None),
+      liveStreamPlaylist.mediaStreamPlaylistTransportStreams.getOrElse(None))
+    stringifyPlaylistPlaylist(l)
+  }
+
   private def stringifyPlaylistPlaylist(l: List[Any]): List[String] = {
     val arr = mutable.ArrayBuffer.empty[String]
     l foreach {
@@ -48,6 +60,8 @@ private[parser] object Serializers {
   implicit class PimpedMediaPlaylist[T <: StreamPlaylist](t: T) {
     def toMasterPlaylistString: String =  (stringifyPlaylistMasterPlaylist _ andThen reduce).apply(t.asInstanceOf[MasterStreamPlaylist])
     def toVodStreamPlaylistString: String = (stringifyPlaylistVodPlaylist _ andThen reduce).apply(t.asInstanceOf[VodStreamPlaylist])
+    def toLiveStreamPlaylistString: String = (stringifyPlaylistLivePlaylist _ andThen reduce).apply(t.asInstanceOf[LiveStreamPlaylist])
+
   }
 
 }

@@ -1,21 +1,6 @@
 import java.nio.file.{Files, Paths}
 
-import com.github.mideo.media.m3u8.parser.{
-  M3U8ParserSuite,
-  MasterStreamPlaylist,
-  VodStreamPlaylist,
-  MediaStreamType,
-  MediaStreamTypeInfo,
-  MediaStreamInfo,
-  MediaStreamFrameInfo,
-  MediaStreamTypeInitializationVectorCompatibilityVersion,
-  MediaStreamTargetDuration,
-  MediaStreamMediaSequence,
-  MediaStreamPlaylistType,
-  MediaStreamProgramDateTime,
-  MediaStreamPlaylistTransportStream,
-  MediaStreamEnd
-}
+import com.github.mideo.media.m3u8.parser._
 
 import scala.io.Source
 
@@ -86,6 +71,37 @@ class StreamPlaylistTest extends M3U8ParserSuite {
     streamPlaylist.mediaStreamProgramDateTime.isInstanceOf[Option[MediaStreamProgramDateTime]] should be(true)
     streamPlaylist.mediaStreamPlaylistTransportStreams.isInstanceOf[Option[List[MediaStreamPlaylistTransportStream]]] should be(true)
     streamPlaylist.mediaStreamEnd.isInstanceOf[Option[MediaStreamEnd]]
+  }
+  test("test LiveStreamPlaylist from String") {
+    //Given
+    val is = getClass.getClassLoader.getResource("live_asset_1800k.m3u8").openStream()
+
+    val data: String = Source.fromInputStream(is).getLines() reduce { (a, b) => s"$a\n$b" }
+
+    //When
+    val streamPlaylist: LiveStreamPlaylist = LiveStreamPlaylist(data)
+
+    streamPlaylist.mediaStreamType.isInstanceOf[Option[MediaStreamType]] should be(true)
+    streamPlaylist.mediaStreamTypeInitializationVectorCompatibilityVersion.isInstanceOf[Option[MediaStreamTypeInitializationVectorCompatibilityVersion]] should be(true)
+    streamPlaylist.mediaStreamTargetDuration.isInstanceOf[Option[MediaStreamTargetDuration]] should be(true)
+    streamPlaylist.mediaStreamMediaSequence.isInstanceOf[Option[MediaStreamMediaSequence]] should be(true)
+    streamPlaylist.mediaStreamProgramDateTime.isInstanceOf[Option[MediaStreamProgramDateTime]] should be(true)
+    streamPlaylist.mediaStreamPlaylistTransportStreams.isInstanceOf[Option[List[MediaStreamPlaylistTransportStream]]] should be(true)
+  }
+
+  test("test LiveStreamPlaylist from InputStream") {
+    //Given
+    val is = getClass.getClassLoader.getResource("live_asset_1800k.m3u8").openStream()
+
+    //When
+    val streamPlaylist: LiveStreamPlaylist = LiveStreamPlaylist(is)
+
+    streamPlaylist.mediaStreamType.isInstanceOf[Option[MediaStreamType]] should be(true)
+    streamPlaylist.mediaStreamTypeInitializationVectorCompatibilityVersion.isInstanceOf[Option[MediaStreamTypeInitializationVectorCompatibilityVersion]] should be(true)
+    streamPlaylist.mediaStreamTargetDuration.isInstanceOf[Option[MediaStreamTargetDuration]] should be(true)
+    streamPlaylist.mediaStreamMediaSequence.isInstanceOf[Option[MediaStreamMediaSequence]] should be(true)
+    streamPlaylist.mediaStreamProgramDateTime.isInstanceOf[Option[MediaStreamProgramDateTime]] should be(true)
+    streamPlaylist.mediaStreamPlaylistTransportStreams.isInstanceOf[Option[List[MediaStreamPlaylistTransportStream]]] should be(true)
   }
 
   test("test write") {
