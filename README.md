@@ -37,9 +37,9 @@ case class MediaStreamPlaylistType(steamType: String)
 
 case class MediaStreamProgramDateTime(dateTime: String) 
 
-case class MediaStreamPlaylistItemDRMInfo(method: String, uri: String, initializationVector: String)
+case class MediaStreamPlaylistTransportStreamDRMInfo(method: String, uri: String, initializationVector: String)
 
-case class MediaStreamPlaylistItem(duration: String, drmInfo: Option[MediaStreamPlaylistItemDRMInfo], uri: String)
+case class MediaStreamPlaylistTransportStream(duration: String, drmInfo: Option[MediaStreamPlaylistTransportStreamDRMInfo], uri: String)
 
 case class MediaStreamEnd() 
 

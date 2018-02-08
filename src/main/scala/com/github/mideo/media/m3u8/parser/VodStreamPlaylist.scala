@@ -23,7 +23,7 @@ object VodStreamPlaylist {
 
     def extractMediaStreamProgramDateTime: Option[MediaStreamProgramDateTime] = s collectFirst { case c if c.isInstanceOf[MediaStreamProgramDateTime] => c.asInstanceOf[MediaStreamProgramDateTime] }
 
-    def extractMediaStreamPlaylistItems: Option[List[MediaStreamPlaylistItem]] = Option(s collect { case c if c.isInstanceOf[MediaStreamPlaylistItem] => c.asInstanceOf[MediaStreamPlaylistItem] })
+    def extractMediaStreamPlaylistTransportStreams: Option[List[MediaStreamPlaylistTransportStream]] = Option(s collect { case c if c.isInstanceOf[MediaStreamPlaylistTransportStream] => c.asInstanceOf[MediaStreamPlaylistTransportStream] })
 
     def extractMediaStreamEnd: Option[MediaStreamEnd] = s collectFirst { case c if c.isInstanceOf[MediaStreamEnd] => c.asInstanceOf[MediaStreamEnd] }
 
@@ -48,7 +48,7 @@ object VodStreamPlaylist {
       mappings extractMediaStreamMediaSequence,
       mappings extractMediaStreamPlaylistType,
       mappings extractMediaStreamProgramDateTime,
-      mappings extractMediaStreamPlaylistItems,
+      mappings extractMediaStreamPlaylistTransportStreams,
       mappings extractMediaStreamEnd
     )
   }
@@ -61,7 +61,7 @@ case class VodStreamPlaylist(mediaStreamType: Option[MediaStreamType],
                              mediaStreamMediaSequence: Option[MediaStreamMediaSequence],
                              mediaStreamPlaylistType: Option[MediaStreamPlaylistType],
                              mediaStreamProgramDateTime: Option[MediaStreamProgramDateTime],
-                             mediaStreamPlaylistItems: Option[List[MediaStreamPlaylistItem]],
+                             mediaStreamPlaylistTransportStreams: Option[List[MediaStreamPlaylistTransportStream]],
                              mediaStreamEnd: Option[MediaStreamEnd]) extends StreamPlaylist {
   override def toPlaylistString: String = this.toVodStreamPlaylistString
 }

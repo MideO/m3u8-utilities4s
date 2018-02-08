@@ -29,7 +29,7 @@ private[parser] object Serializers {
       vodStreamPlaylist.mediaStreamMediaSequence.getOrElse(None),
       vodStreamPlaylist.mediaStreamPlaylistType.getOrElse(None),
       vodStreamPlaylist.mediaStreamProgramDateTime.getOrElse(None),
-      vodStreamPlaylist.mediaStreamPlaylistItems.getOrElse(None),
+      vodStreamPlaylist.mediaStreamPlaylistTransportStreams.getOrElse(None),
       vodStreamPlaylist.mediaStreamEnd.getOrElse(None))
     stringifyPlaylistPlaylist(l)
   }

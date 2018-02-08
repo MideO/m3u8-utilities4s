@@ -76,24 +76,24 @@ private[parser] object Deserializers {
       case line: String if StreamPlaylistSection.MediaStreamProgramDateTime.isSectionType(line) =>
         MediaStreamProgramDateTime(stripSpaces(line, StreamPlaylistSection.MediaStreamProgramDateTime.identifier))
 
-      case line: String if StreamPlaylistSection.MediaStreamPlaylistItem.isSectionType(line) =>
+      case line: String if StreamPlaylistSection.MediaStreamPlaylistTransportStream.isSectionType(line) =>
         val data = line.split("\n")
         val durationData = mapFields(data.head)
         if (data.length > 2) {
           val drmInfo = mapFields(data(1))
           val asset = mapFields(data(data.length - 1))
-          MediaStreamPlaylistItem(durationData(StreamPlaylistSection.MediaStreamPlaylistItem.XARGS),
-            Option(MediaStreamPlaylistItemDRMInfo(
-              drmInfo(StreamPlaylistSection.MediaStreamPlaylistItemDRMInfo.METHOD),
-              drmInfo(StreamPlaylistSection.MediaStreamPlaylistItemDRMInfo.URI),
-              drmInfo(StreamPlaylistSection.MediaStreamPlaylistItemDRMInfo.IV))
+          MediaStreamPlaylistTransportStream(durationData(StreamPlaylistSection.MediaStreamPlaylistTransportStream.XARGS),
+            Option(MediaStreamPlaylistTransportStreamDRMInfo(
+              drmInfo(StreamPlaylistSection.MediaStreamPlaylistTransportStreamDRMInfo.METHOD),
+              drmInfo(StreamPlaylistSection.MediaStreamPlaylistTransportStreamDRMInfo.URI),
+              drmInfo(StreamPlaylistSection.MediaStreamPlaylistTransportStreamDRMInfo.IV))
             ),
-            asset(StreamPlaylistSection.MediaStreamPlaylistItem.XARGS))
+            asset(StreamPlaylistSection.MediaStreamPlaylistTransportStream.XARGS))
         } else {
           val asset = mapFields(data(data.length - 1))
-          MediaStreamPlaylistItem(durationData(StreamPlaylistSection.MediaStreamPlaylistItem.XARGS),
+          MediaStreamPlaylistTransportStream(durationData(StreamPlaylistSection.MediaStreamPlaylistTransportStream.XARGS),
             None,
-            asset(StreamPlaylistSection.MediaStreamPlaylistItem.XARGS))
+            asset(StreamPlaylistSection.MediaStreamPlaylistTransportStream.XARGS))
         }
       case line: String if StreamPlaylistSection.MediaStreamEnd.isSectionType(line) =>
         MediaStreamEnd()

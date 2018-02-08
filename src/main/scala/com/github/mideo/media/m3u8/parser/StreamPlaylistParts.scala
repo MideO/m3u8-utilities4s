@@ -2,12 +2,6 @@ package com.github.mideo.media.m3u8.parser
 
 trait MediaStreamPlaylistParts {
   def toString: String
-
-  implicit class  PimpedMediaStreamPlaylistParts(s:Array[MediaStreamPlaylistParts]) {
-    def zollect[T] =  s collectFirst {
-      case c if c.isInstanceOf[MediaStreamType] => c.asInstanceOf[T]
-    }
-  }
 }
 
 
@@ -101,19 +95,19 @@ case class MediaStreamProgramDateTime(dateTime: String) extends MediaStreamPlayl
   override def toString: String = s"#${StreamPlaylistSection.MediaStreamProgramDateTime.identifier}$dateTime"
 }
 
-case class MediaStreamPlaylistItemDRMInfo(method: String, uri: String, initializationVector: String) extends MediaStreamPlaylistParts {
+case class MediaStreamPlaylistTransportStreamDRMInfo(method: String, uri: String, initializationVector: String) extends MediaStreamPlaylistParts {
 
-  override def toString: String = s"#${StreamPlaylistSection.MediaStreamPlaylistItemDRMInfo.identifier}" +
-    s"${StreamPlaylistSection.MediaStreamPlaylistItemDRMInfo.METHOD}=$method," +
-    s"""${StreamPlaylistSection.MediaStreamPlaylistItemDRMInfo.URI}="$uri",""" +
-    s"${StreamPlaylistSection.MediaStreamPlaylistItemDRMInfo.IV}=$initializationVector"
+  override def toString: String = s"#${StreamPlaylistSection.MediaStreamPlaylistTransportStreamDRMInfo.identifier}" +
+    s"${StreamPlaylistSection.MediaStreamPlaylistTransportStreamDRMInfo.METHOD}=$method," +
+    s"""${StreamPlaylistSection.MediaStreamPlaylistTransportStreamDRMInfo.URI}="$uri",""" +
+    s"${StreamPlaylistSection.MediaStreamPlaylistTransportStreamDRMInfo.IV}=$initializationVector"
 }
 
-case class MediaStreamPlaylistItem(duration: String, drmInfo: Option[MediaStreamPlaylistItemDRMInfo], uri: String) extends MediaStreamPlaylistParts {
+case class MediaStreamPlaylistTransportStream(duration: String, drmInfo: Option[MediaStreamPlaylistTransportStreamDRMInfo], uri: String) extends MediaStreamPlaylistParts {
   override def toString: String = if (drmInfo.isEmpty) {
-    s"#${StreamPlaylistSection.MediaStreamPlaylistItem.identifier}$duration,\n$uri"
+    s"#${StreamPlaylistSection.MediaStreamPlaylistTransportStream.identifier}$duration,\n$uri"
   } else {
-    s"#${StreamPlaylistSection.MediaStreamPlaylistItem.identifier}$duration,\n" +
+    s"#${StreamPlaylistSection.MediaStreamPlaylistTransportStream.identifier}$duration,\n" +
       s"${drmInfo.get.toString}\n" +
       s"$uri"
   }

@@ -24,7 +24,7 @@ object StreamPlaylistSection {
     override def isSectionType(string: String): Boolean = {
       string.toLowerCase.startsWith(identifier.toLowerCase)&&
         !string.contains("-") &&
-        !MediaStreamPlaylistItem.isSectionType(string)
+        !MediaStreamPlaylistTransportStream.isSectionType(string)
 
     }
 
@@ -81,11 +81,11 @@ object StreamPlaylistSection {
     override val identifier: String = "EXT-X-PROGRAM-DATE-TIME:"
   }
 
-  object MediaStreamPlaylistItem extends MediaStreamPlaylistSection {
+  object MediaStreamPlaylistTransportStream extends MediaStreamPlaylistSection {
     override val identifier: String = "EXTINF:"
   }
 
-  object MediaStreamPlaylistItemDRMInfo extends MediaStreamPlaylistSection {
+  object MediaStreamPlaylistTransportStreamDRMInfo extends MediaStreamPlaylistSection {
     override val identifier: String = "EXT-X-KEY:"
     val METHOD = "METHOD"
     val URI = "URI"

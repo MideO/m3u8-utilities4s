@@ -13,7 +13,7 @@ import com.github.mideo.media.m3u8.parser.{
   MediaStreamMediaSequence,
   MediaStreamPlaylistType,
   MediaStreamProgramDateTime,
-  MediaStreamPlaylistItem,
+  MediaStreamPlaylistTransportStream,
   MediaStreamEnd
 }
 
@@ -67,7 +67,7 @@ class StreamPlaylistTest extends M3U8ParserSuite {
     streamPlaylist.mediaStreamMediaSequence.isInstanceOf[Option[MediaStreamMediaSequence]] should be(true)
     streamPlaylist.mediaStreamPlaylistType.isInstanceOf[Option[MediaStreamPlaylistType]] should be(true)
     streamPlaylist.mediaStreamProgramDateTime.isInstanceOf[Option[MediaStreamProgramDateTime]] should be(true)
-    streamPlaylist.mediaStreamPlaylistItems.isInstanceOf[Option[List[MediaStreamPlaylistItem]]] should be(true)
+    streamPlaylist.mediaStreamPlaylistTransportStreams.isInstanceOf[Option[List[MediaStreamPlaylistTransportStream]]] should be(true)
     streamPlaylist.mediaStreamEnd.isInstanceOf[Option[MediaStreamEnd]]
   }
 
@@ -84,7 +84,7 @@ class StreamPlaylistTest extends M3U8ParserSuite {
     streamPlaylist.mediaStreamMediaSequence.isInstanceOf[Option[MediaStreamMediaSequence]] should be(true)
     streamPlaylist.mediaStreamPlaylistType.isInstanceOf[Option[MediaStreamPlaylistType]] should be(true)
     streamPlaylist.mediaStreamProgramDateTime.isInstanceOf[Option[MediaStreamProgramDateTime]] should be(true)
-    streamPlaylist.mediaStreamPlaylistItems.isInstanceOf[Option[List[MediaStreamPlaylistItem]]] should be(true)
+    streamPlaylist.mediaStreamPlaylistTransportStreams.isInstanceOf[Option[List[MediaStreamPlaylistTransportStream]]] should be(true)
     streamPlaylist.mediaStreamEnd.isInstanceOf[Option[MediaStreamEnd]]
   }
 

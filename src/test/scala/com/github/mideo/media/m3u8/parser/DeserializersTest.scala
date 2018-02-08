@@ -37,7 +37,7 @@ class DeserializersTest extends M3U8ParserSuite {
     streamPlaylist.mediaStreamMediaSequence.get.numberOfUrls should be("1")
     streamPlaylist.mediaStreamPlaylistType.get.steamType should be("VOD")
     streamPlaylist.mediaStreamProgramDateTime.get.dateTime should be("2017-11-16T00:00:00.000Z")
-    streamPlaylist.mediaStreamPlaylistItems.isEmpty should be(false)
+    streamPlaylist.mediaStreamPlaylistTransportStreams.isEmpty should be(false)
     streamPlaylist.mediaStreamEnd.isEmpty should be(false)
   }
 
