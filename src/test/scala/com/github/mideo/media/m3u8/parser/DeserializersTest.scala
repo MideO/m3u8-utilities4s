@@ -2,6 +2,7 @@ package com.github.mideo.media.m3u8.parser
 
 import scala.io.Source
 import Deserializers._
+import com.github.mideo.media.m3u8.M3U8ParserSuite
 class DeserializersTest extends M3U8ParserSuite {
 
   test("testDeserialize master playlist") {

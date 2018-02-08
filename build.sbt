@@ -24,7 +24,9 @@ resolvers ++= Seq(
 )
 
 libraryDependencies ++= Seq(
-  "org.scalatest" %% "scalatest" % "3.0.4" % "test"
+  "org.scalatest" %% "scalatest" % "3.0.4" % Test,
+  "org.mockito" % "mockito-all" % "1.10.19" % Test
+
 )
 
 parallelExecution in Test := false

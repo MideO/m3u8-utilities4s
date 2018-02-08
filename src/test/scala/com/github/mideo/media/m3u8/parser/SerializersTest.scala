@@ -3,6 +3,7 @@ package com.github.mideo.media.m3u8.parser
 import scala.io.Source
 import Deserializers._
 import Serializers._
+import com.github.mideo.media.m3u8.M3U8ParserSuite
 
 class SerializersTest extends M3U8ParserSuite {
 

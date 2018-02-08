@@ -1,4 +1,4 @@
-package com.github.mideo.media.m3u8.parser
+package com.github.mideo.media.m3u8
 
 import org.scalatest.{FunSuite, Matchers}
 
