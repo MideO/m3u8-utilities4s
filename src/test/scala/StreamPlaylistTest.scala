@@ -1,4 +1,3 @@
-import java.net.HttpCookie
 import java.nio.file.{Files, Paths}
 
 import com.github.mideo.media.m3u8.M3U8ParserSuite

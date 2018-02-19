@@ -3,35 +3,37 @@ package com.github.mideo.media.m3u8.downloader
 import java.net.{HttpURLConnection, URL}
 
 import scala.collection.JavaConverters._
+import scala.concurrent.{ExecutionContext, Future}
 import scala.io.{BufferedSource, Source}
 
 
-private[downloader] case class HttpResponse(Headers: Map[String, String],
-                                            content: BufferedSource)
 
-private[downloader] case class HttpRequest(Method: String, Url: String,
-                                           Headers: Map[String, String] = Map.empty,
-                                           Content: Option[Array[Byte]] = None,
-                                           ConnectTimeout: Int = 5000,
-                                           ReadTimeout: Int = 5000)
+case class HttpRequest(Method: String, Url: String,
+                       Headers: Map[String, String] = Map.empty,
+                       Content: Option[Array[Byte]] = None,
+                       ConnectTimeout: Int = 5000,
+                       ReadTimeout: Int = 5000)
 
-trait Communicator {
+case class HttpResponse(Headers: Map[String, String], content: BufferedSource)
+
+
+object HttpClient {
+
+
   @throws(classOf[java.io.IOException])
   @throws(classOf[java.net.SocketTimeoutException])
-  def makeHttpRequest(httpRequest: HttpRequest): HttpResponse = {
-    val connection = createConnection(httpRequest)
-    def headers = connection
-      .getHeaderFields
-      .keySet().asScala map { it => it -> connection.getHeaderField(it)} toMap
+  def makeHttpRequest(httpRequest: HttpRequest)(implicit ec:ExecutionContext): Future[HttpResponse] = createConnection(httpRequest) map {
+      connection =>
+        def headers = connection
+          .getHeaderFields
+          .keySet().asScala map { it => it -> connection.getHeaderField(it) } toMap
 
-    HttpResponse(headers, Source.fromInputStream(connection.getInputStream))
-  }
+        HttpResponse(headers, Source.fromInputStream(connection.getInputStream))
+    }
 
-  def createConnection(httpRequest: HttpRequest): HttpURLConnection
-}
 
-trait HttpConnection {
-  def createConnection(httpRequest: HttpRequest): HttpURLConnection = {
+  private def createConnection(httpRequest: HttpRequest)(implicit ec:ExecutionContext): Future[HttpURLConnection] = Future {
+
     val connection = new URL(httpRequest.Url).openConnection.asInstanceOf[HttpURLConnection]
     connection.setConnectTimeout(httpRequest.ConnectTimeout)
     connection.setReadTimeout(httpRequest.ReadTimeout)
@@ -49,7 +51,7 @@ trait HttpConnection {
     }
     connection
   }
+
 }
 
-object HttpClient extends Communicator with HttpConnection
 
