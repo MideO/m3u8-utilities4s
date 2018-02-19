@@ -4,9 +4,7 @@ import java.net.{HttpURLConnection, URL}
 
 import scala.collection.JavaConverters._
 import scala.concurrent.{ExecutionContext, Future}
-import scala.io.{BufferedSource, Source}
-
-
+import sun.misc.IOUtils.readFully
 
 case class HttpRequest(Method: String, Url: String,
                        Headers: Map[String, String] = Map.empty,
@@ -14,7 +12,7 @@ case class HttpRequest(Method: String, Url: String,
                        ConnectTimeout: Int = 5000,
                        ReadTimeout: Int = 5000)
 
-case class HttpResponse(Headers: Map[String, String], content: BufferedSource)
+case class HttpResponse(Headers: Map[String, String], content: Array[Byte])
 
 
 object HttpClient {
@@ -28,7 +26,7 @@ object HttpClient {
           .getHeaderFields
           .keySet().asScala map { it => it -> connection.getHeaderField(it) } toMap
 
-        HttpResponse(headers, Source.fromInputStream(connection.getInputStream))
+        HttpResponse(headers, readFully(connection.getInputStream, -1, true))
     }
 
 

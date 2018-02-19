@@ -1,4 +1,3 @@
-import java.nio.file.{Files, Paths}
 
 import com.github.mideo.media.m3u8.M3U8ParserSuite
 import com.github.mideo.media.m3u8.parser._
@@ -117,23 +116,6 @@ class StreamPlaylistTest extends M3U8ParserSuite {
 
   }
 
-  test("test saveToFile") {
-    try {
-      //Given
-      val is = getClass.getClassLoader.getResource("master.m3u8").openStream()
-
-      //When
-      val streamPlaylist = MasterStreamPlaylist(is)
-      streamPlaylist.saveToFile("master2.m3u8")
-
-      //Then
-      val data2: String = Source.fromFile("master2.m3u8").getLines() reduce { (a, b) => s"$a\n$b" }
-
-      data2 should not be empty
-    } finally {
-      Files.delete(Paths.get("master2.m3u8"))
-    }
-  }
 
   test("test builders") {
     //Given

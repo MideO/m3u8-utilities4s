@@ -33,13 +33,13 @@ class HttpClientTest extends AsyncM3U8ParserSuite {
 
     //Then
     response map {
-      it =>
+      it:HttpResponse =>
         wireMockServer.verify(postRequestedFor(urlEqualTo("/test"))
           .withHeader("header2", equalTo("value2"))
           .withRequestBody(equalTo("payload")))
         it.Headers.keySet should contain("header1")
         it.Headers("header1") should be("value1")
-        it.content.mkString should be("abcs")
+        new String(it.content) should be("abcs")
 
     }
 
@@ -58,11 +58,11 @@ class HttpClientTest extends AsyncM3U8ParserSuite {
 
     //Then
     response map {
-      it =>
+      it:HttpResponse =>
         wireMockServer.verify(getRequestedFor(urlEqualTo("/test")))
         it.Headers.keySet should contain("header1")
         it.Headers("header1") should be("value1")
-        it.content.mkString should be("abcs")
+        new String(it.content) should be("abcs")
     }
 
 

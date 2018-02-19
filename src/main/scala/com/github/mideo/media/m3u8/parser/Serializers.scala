@@ -6,7 +6,7 @@ private[parser] object Serializers {
 
   private def reduce(playListPartsString: List[String]): String = {
     playListPartsString.reduce {
-      _ + "," + _
+      _ + "" + _
     }
   }
 
