@@ -4,7 +4,7 @@ trait StreamPlaylist  {
 
   val mediaStreamType: Option[MediaStreamType]
 
-  def toPlaylistString: String
+  override def toString: String
 
 }
 

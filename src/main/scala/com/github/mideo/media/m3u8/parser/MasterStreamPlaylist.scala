@@ -94,5 +94,5 @@ case class MasterStreamPlaylist(mediaStreamType: Option[MediaStreamType],
       m)
   }
 
-  override def toPlaylistString: String = this.toMasterPlaylistString
+  override def toString: String = this.toMasterPlaylistString
 }

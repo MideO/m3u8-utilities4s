@@ -11,9 +11,9 @@ import scala.io.Source
 class StreamPlaylistWriteTest extends AsyncM3U8ParserSuite {
   val dataTable = Table(
     ("playlistFile", "data"),
-    ("master.m3u8",  MasterStreamPlaylist(getClass.getClassLoader.getResource("master.m3u8").openStream()).toPlaylistString.getBytes()),
-    ("live_asset_1800k.m3u8",  LiveStreamPlaylist(getClass.getClassLoader.getResource("live_asset_1800k.m3u8").openStream()).toPlaylistString.getBytes()),
-    ("vod_asset_1800k.m3u8", VodStreamPlaylist(getClass.getClassLoader.getResource("vod_asset_1800k.m3u8").openStream()).toPlaylistString.getBytes())
+    ("master.m3u8",  MasterStreamPlaylist(getClass.getClassLoader.getResource("master.m3u8").openStream()).toString.getBytes()),
+    ("live_asset_1800k.m3u8",  LiveStreamPlaylist(getClass.getClassLoader.getResource("live_asset_1800k.m3u8").openStream()).toString.getBytes()),
+    ("vod_asset_1800k.m3u8", VodStreamPlaylist(getClass.getClassLoader.getResource("vod_asset_1800k.m3u8").openStream()).toString.getBytes())
   )
 
   forAll(dataTable) {

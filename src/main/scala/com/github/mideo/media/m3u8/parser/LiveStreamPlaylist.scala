@@ -35,10 +35,11 @@ object LiveStreamPlaylist {
 
 
 case class LiveStreamPlaylist(mediaStreamType: Option[MediaStreamType],
-                             mediaStreamTypeInitializationVectorCompatibilityVersion: Option[MediaStreamTypeInitializationVectorCompatibilityVersion],
-                             mediaStreamTargetDuration: Option[MediaStreamTargetDuration],
-                             mediaStreamMediaSequence: Option[MediaStreamMediaSequence],
-                             mediaStreamProgramDateTime: Option[MediaStreamProgramDateTime],
-                             mediaStreamPlaylistTransportStreams: Option[List[MediaStreamPlaylistTransportStream]]) extends StreamPlaylist {
-  override def toPlaylistString: String = this.toLiveStreamPlaylistString
+                              mediaStreamTypeInitializationVectorCompatibilityVersion: Option[MediaStreamTypeInitializationVectorCompatibilityVersion],
+                              mediaStreamTargetDuration: Option[MediaStreamTargetDuration],
+                              mediaStreamMediaSequence: Option[MediaStreamMediaSequence],
+                              mediaStreamProgramDateTime: Option[MediaStreamProgramDateTime],
+                              mediaStreamPlaylistTransportStreams: Option[List[MediaStreamPlaylistTransportStream]]) extends StreamPlaylist {
+
+  override def toString: String = this.toLiveStreamPlaylistString
 }

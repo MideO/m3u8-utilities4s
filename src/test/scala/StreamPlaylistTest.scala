@@ -112,7 +112,7 @@ class StreamPlaylistTest extends M3U8ParserSuite {
     val streamPlaylist = MasterStreamPlaylist(is)
 
     //Then
-    streamPlaylist.toPlaylistString.isInstanceOf[String] should be(true)
+    streamPlaylist.toString.isInstanceOf[String] should be(true)
 
   }
 
