@@ -4,10 +4,12 @@ import java.io.InputStream
 
 import Deserializers._
 import Serializers._
+import com.github.mideo.media.m3u8.io.FileSystem
 
-import scala.io.Source
+import scala.concurrent.{ExecutionContext, Future}
 
 object MasterStreamPlaylist {
+
   private implicit class PimpedListOfMediaStreamPlaylistParts(s: List[MediaStreamPlaylistParts]) {
     def extractMediaStreamType: Option[MediaStreamType] = s collectFirst { case c if c.isInstanceOf[MediaStreamType] => c.asInstanceOf[MediaStreamType] }
 
@@ -29,24 +31,23 @@ object MasterStreamPlaylist {
   }
 
 
-  def apply(data: String = ""): MasterStreamPlaylist = {
-    data.toMasterPlaylist
-  }
+  def apply(data: String = "")(implicit ec:ExecutionContext): Future[MasterStreamPlaylist] = data.toMasterPlaylist
 
-  def apply(data: InputStream): MasterStreamPlaylist = {
-    Source.fromInputStream(data)
-      .getLines() reduce {
-      _ + "\n" + _
-    } toMasterPlaylist
-  }
 
-  def apply(mappings: List[MediaStreamPlaylistParts]): MasterStreamPlaylist = MasterStreamPlaylist(
-    mappings extractMediaStreamType,
-    mappings extractMediaStreamIndependentSegments,
-    mappings extractMediaStreamTypeInfo,
-    mappings extractMediaStreamInfoToMap,
-    mappings extractMediaStreamFrameInfoToMap
-  )
+  def apply(data: InputStream)(implicit ec:ExecutionContext): Future[MasterStreamPlaylist] = FileSystem.read(data, (a: String, b: String) => a + "\n" + b) map {
+    _ toMasterPlaylist
+  } flatten
+
+
+  def apply(mappings: List[MediaStreamPlaylistParts])(implicit ec:ExecutionContext): Future[MasterStreamPlaylist] = Future {
+    MasterStreamPlaylist(
+      mappings extractMediaStreamType,
+      mappings extractMediaStreamIndependentSegments,
+      mappings extractMediaStreamTypeInfo,
+      mappings extractMediaStreamInfoToMap,
+      mappings extractMediaStreamFrameInfoToMap
+    )
+  }
 
 }
 

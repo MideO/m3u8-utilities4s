@@ -1,5 +1,8 @@
 package com.github.mideo.media.m3u8.parser
 
+import scala.concurrent.Future
+import scala.concurrent.ExecutionContext.Implicits.global
+
 private[parser] object Deserializers {
   private def mapFields(s: String): Map[String, String] = {
     val listData = s.split(":(?=(?!//))")
@@ -107,11 +110,11 @@ private[parser] object Deserializers {
 
 
   implicit class PimpedMediaPlaylistString(val s: String) {
-    def toVodStreamPlaylist: VodStreamPlaylist = (mapData _ andThen VodStreamPlaylist.apply) (s)
+    def toVodStreamPlaylist: Future[VodStreamPlaylist] = (mapData _ andThen VodStreamPlaylist.apply) (s)
 
     def toLiveStreamPlaylist: LiveStreamPlaylist = (mapData _ andThen LiveStreamPlaylist.apply) (s)
 
-    def toMasterPlaylist: MasterStreamPlaylist = (mapData _ andThen MasterStreamPlaylist.apply) (s)
+    def toMasterPlaylist: Future[MasterStreamPlaylist] = (mapData _ andThen MasterStreamPlaylist.apply) (s)
   }
 
 }

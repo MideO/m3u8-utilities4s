@@ -1,4 +1,4 @@
-package com.github.mideo.media.m3u8.downloader
+package com.github.mideo.media.m3u8.io
 
 import java.net.{HttpURLConnection, URL}
 
@@ -6,31 +6,29 @@ import scala.collection.JavaConverters._
 import scala.concurrent.{ExecutionContext, Future}
 import sun.misc.IOUtils.readFully
 
-case class HttpRequest(Method: String, Url: String,
-                       Headers: Map[String, String] = Map.empty,
-                       Content: Option[Array[Byte]] = None,
-                       ConnectTimeout: Int = 5000,
-                       ReadTimeout: Int = 5000)
 
-case class HttpResponse(Headers: Map[String, String], content: Array[Byte])
+object Http {
+  case class Response(Headers: Map[String, String], content: Array[Byte])
 
-
-object HttpClient {
-
+  case class Request(Method: String, Url: String,
+                     Headers: Map[String, String] = Map.empty,
+                     Content: Option[Array[Byte]] = None,
+                     ConnectTimeout: Int = 5000,
+                     ReadTimeout: Int = 5000)
 
   @throws(classOf[java.io.IOException])
   @throws(classOf[java.net.SocketTimeoutException])
-  def makeHttpRequest(httpRequest: HttpRequest)(implicit ec:ExecutionContext): Future[HttpResponse] = createConnection(httpRequest) map {
+  def write(httpRequest: Request)(implicit ec:ExecutionContext): Future[Response] = createConnection(httpRequest) map {
       connection =>
         def headers = connection
           .getHeaderFields
           .keySet().asScala map { it => it -> connection.getHeaderField(it) } toMap
 
-        HttpResponse(headers, readFully(connection.getInputStream, -1, true))
+        Response(headers, readFully(connection.getInputStream, -1, true))
     }
 
 
-  private def createConnection(httpRequest: HttpRequest)(implicit ec:ExecutionContext): Future[HttpURLConnection] = Future {
+  private def createConnection(httpRequest: Request)(implicit ec:ExecutionContext): Future[HttpURLConnection] = Future {
 
     val connection = new URL(httpRequest.Url).openConnection.asInstanceOf[HttpURLConnection]
     connection.setConnectTimeout(httpRequest.ConnectTimeout)

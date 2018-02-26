@@ -1,14 +1,14 @@
 import java.nio.file.{Files, Paths}
 
-import com.github.mideo.media.m3u8.AsyncM3U8ParserSuite
+import com.github.mideo.media.m3u8.M3U8ParserSuite
+import com.github.mideo.media.m3u8.io.FileSystem
 import com.github.mideo.media.m3u8.parser._
-import com.github.mideo.media.m3u8.persistence.FileSystemDataWriter
 import org.scalatest.prop.TableDrivenPropertyChecks._
 
 import scala.io.Source
 
 
-class StreamPlaylistWriteTest extends AsyncM3U8ParserSuite {
+class StreamPlaylistWriteTest extends M3U8ParserSuite {
   val dataTable = Table(
     ("playlistFile", "data"),
     ("master.m3u8",  MasterStreamPlaylist(getClass.getClassLoader.getResource("master.m3u8").openStream()).toString.getBytes()),
@@ -21,7 +21,7 @@ class StreamPlaylistWriteTest extends AsyncM3U8ParserSuite {
       test(s"test saving To File StreamPlaylist type with $playlistFile") {
 
         //When
-        FileSystemDataWriter.write(playlistFile, data) map {
+        FileSystem.write(playlistFile, data) map {
 
           //Then
           _ =>

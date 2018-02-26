@@ -15,17 +15,23 @@ class SerializersTest extends M3U8ParserSuite {
       _ + "\n" + _
     }
 
-    val streamPlaylist = data.toMasterPlaylist
-
     //When
-    val result = streamPlaylist.toMasterPlaylistString
+    val result = data.toMasterPlaylist map {
+      result => result toMasterPlaylistString
+    }
+
 
     //Then
-    data.split("\n") map {
-      x => withClue(s"$x not in result") {
-        result.contains(x) should be(true)
-      }
+    result map {
+      it =>
+        data.split("\n") map {
+          x =>
+            withClue(s"$x not in result") {
+              it.contains(x)
+            }
+        } reduce { (a:Boolean, b:Boolean ) => a && b } should equal(true)
     }
+
 
   }
 
@@ -37,18 +43,24 @@ class SerializersTest extends M3U8ParserSuite {
       _ + "\n" + _
     }
 
-    //When
-    val streamPlaylist = data.toVodStreamPlaylist
 
     //When
-    val result = streamPlaylist.toVodStreamPlaylistString
+    val result = data.toVodStreamPlaylist map {
+      streamPlaylist => streamPlaylist toVodStreamPlaylistString
+    }
 
     //Then
-    data.split("\n") map {
-      x => withClue(s"$x not in $result") {
-        result.contains(x) should be(true)
-      }
+    result map {
+      it =>
+        data.split("\n") map {
+          x =>
+            withClue(s"$x not in $result") {
+              it.contains(x)
+            }
+        } reduce { (a:Boolean, b:Boolean ) => a && b } should equal(true)
+
     }
+
 
   }
 
@@ -60,17 +72,23 @@ class SerializersTest extends M3U8ParserSuite {
       _ + "\n" + _
     }
 
-    val streamPlaylist = data.toMasterPlaylist
 
     //When
-    val result = streamPlaylist.toMasterPlaylistString
+    val result = data.toMasterPlaylist map {
+      result => result toMasterPlaylistString
+    }
 
     //Then
-    data.split("\n") map {
-      x => withClue(s"$x not in result") {
-        result.contains(x) should be(true)
-      }
+    result map {
+      it =>
+        data.split("\n") map {
+          x =>
+            withClue(s"$x not in result") {
+              it.contains(x)
+            }
+        } reduce { (a:Boolean, b:Boolean ) => a && b } should equal(true)
     }
+
 
   }
 

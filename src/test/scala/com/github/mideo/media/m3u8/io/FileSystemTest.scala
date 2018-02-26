@@ -1,14 +1,14 @@
-package com.github.mideo.media.m3u8.persistence
+package com.github.mideo.media.m3u8.io
 
 import java.nio.file.{Files, Paths}
 
-import com.github.mideo.media.m3u8.AsyncM3U8ParserSuite
+import com.github.mideo.media.m3u8.M3U8ParserSuite
 
 import scala.io.Source
 
 
 
-class FileSystemDataWriterTest extends AsyncM3U8ParserSuite {
+class FileSystemTest extends M3U8ParserSuite {
 
   test("testSaveToFile") {
 
@@ -16,7 +16,7 @@ class FileSystemDataWriterTest extends AsyncM3U8ParserSuite {
     val content = "Lorem ipsum dolor sit amet, consectetuer adipiscing elit."
 
     //When
-    FileSystemDataWriter
+    FileSystem
       .write("content", content.getBytes()) map {
       _ =>
         //Then

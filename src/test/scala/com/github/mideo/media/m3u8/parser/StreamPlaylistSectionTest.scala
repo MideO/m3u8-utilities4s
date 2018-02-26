@@ -1,8 +1,8 @@
 package com.github.mideo.media.m3u8.parser
 
-import com.github.mideo.media.m3u8.M3U8ParserSuite
+import org.scalatest.{FunSuite, Matchers}
 
-class StreamPlaylistSectionTest extends M3U8ParserSuite {
+class StreamPlaylistSectionTest extends FunSuite with Matchers {
 
 
   test("MediaStreamType testIsSectionType match") {
