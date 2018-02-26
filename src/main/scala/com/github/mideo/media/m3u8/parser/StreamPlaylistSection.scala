@@ -1,8 +1,8 @@
 package com.github.mideo.media.m3u8.parser
 
-trait StreamPlaylistSection
+sealed trait StreamPlaylistSection
 
-object StreamPlaylistSection {
+private[parser] object StreamPlaylistSection {
 
   sealed trait SectionFields extends Enumeration {
     val XARGS = "XARGS"
