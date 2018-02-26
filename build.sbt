@@ -14,6 +14,8 @@ scalacOptions ++= Seq(
   "-language:postfixOps"
 )
 
+resourceDirectory in Test := baseDirectory.value / "src/test/resources"
+
 description := "A keystore manager backed by Java KeyStore on file system as default storage"
 
 resolvers ++= Seq(

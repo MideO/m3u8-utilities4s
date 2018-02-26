@@ -8,9 +8,10 @@ import scala.io.Source
 
 
 
+
 class FileSystemTest extends M3U8ParserSuite {
 
-  test("testSaveToFile") {
+  test("test write") {
 
     //Given
     val content = "Lorem ipsum dolor sit amet, consectetuer adipiscing elit."
@@ -29,4 +30,27 @@ class FileSystemTest extends M3U8ParserSuite {
 
   }
 
+  test("test read file") {
+    //When
+    val is = FileSystem.getClass.getClassLoader.getResource("master.m3u8").openStream()
+
+
+    //Then
+    FileSystem.read(is, (a:String, b:String) => s"$a\n$b") map {
+      _ should not be empty
+    }
+
+  }
+
+
+  test("test read inputStream") {
+
+    //Given
+    val fileName = Paths.get(getClass.getClassLoader.getResource("master.m3u8").toURI).toAbsolutePath.toString
+
+    //Then
+    FileSystem.read(fileName, (a: String, b: String) => s"$a\n$b") map {
+      _ should not be empty
+    }
+  }
 }

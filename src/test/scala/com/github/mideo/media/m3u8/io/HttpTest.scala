@@ -20,7 +20,7 @@ class HttpTest extends M3U8ParserSuite {
     override def run(): Unit = wireMockServer.shutdownServer()
   })
 
-  test("makeHttpRequest Post") {
+  test("write with Post") {
     //Given
     val request = Http.Request("POST", wireMockServer.url("/test"), Map("header2" -> "value2"), Some("payload".getBytes()), 3000, 2000)
     wireMockServer.stubFor(post(urlEqualTo("/test"))
@@ -46,7 +46,7 @@ class HttpTest extends M3U8ParserSuite {
 
   }
 
-  test("makeHttpRequest Get") {
+  test("write with  Get") {
     //Given
     wireMockServer.stubFor(get(urlEqualTo("/test"))
       .willReturn(aResponse()
