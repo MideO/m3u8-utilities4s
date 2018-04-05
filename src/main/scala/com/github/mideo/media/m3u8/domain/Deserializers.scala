@@ -1,9 +1,11 @@
-package com.github.mideo.media.m3u8.parser
+package com.github.mideo.media.m3u8.domain
 
-import scala.concurrent.Future
+import com.github.mideo.media.m3u8._
+
 import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.Future
 
-private[parser] object Deserializers {
+private[m3u8] object Deserializers {
   private def mapFields(s: String): Map[String, String] = {
     val listData = s.split(":(?=(?!//))")
     if (listData.length > 1) {

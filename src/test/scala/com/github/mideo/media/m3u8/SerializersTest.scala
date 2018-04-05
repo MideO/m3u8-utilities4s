@@ -1,12 +1,12 @@
-package com.github.mideo.media.m3u8.parser
+package com.github.mideo.media.m3u8
+
+import com.github.mideo.M3U8ParserSuite
+import com.github.mideo.media.m3u8.domain.Deserializers._
+import com.github.mideo.media.m3u8.domain.Serializers._
 
 import scala.io.Source
-import Deserializers._
-import Serializers._
-import com.github.mideo.media.m3u8.M3U8ParserSuite
 
-
-class StreamTransformerTest extends M3U8ParserSuite {
+class SerializersTest extends M3U8ParserSuite {
 
   test("testSerialize") {
     //Given
@@ -16,12 +16,11 @@ class StreamTransformerTest extends M3U8ParserSuite {
       _ + "\n" + _
     }
 
-    val streamPlaylist = data.toMasterPlaylist
-
     //When
-    val result = streamPlaylist map {
-      result => result.toMasterPlaylistString
+    val result = data.toMasterPlaylist map {
+      result => result toMasterPlaylistString
     }
+
 
     //Then
     result map {
@@ -29,7 +28,7 @@ class StreamTransformerTest extends M3U8ParserSuite {
         data.split("\n") map {
           x =>
             withClue(s"$x not in result") {
-             it.contains(x)
+              it.contains(x)
             }
         } reduce { (a:Boolean, b:Boolean ) => a && b } should equal(true)
     }
@@ -45,16 +44,13 @@ class StreamTransformerTest extends M3U8ParserSuite {
       _ + "\n" + _
     }
 
-    //When
-    val streamPlaylist = data.toVodStreamPlaylist
 
     //When
-    val result = streamPlaylist map {
-      result => result.toVodStreamPlaylistString
+    val result = data.toVodStreamPlaylist map {
+      streamPlaylist => streamPlaylist toVodStreamPlaylistString
     }
 
-
-    //Then//Then
+    //Then
     result map {
       it =>
         data.split("\n") map {
@@ -63,7 +59,9 @@ class StreamTransformerTest extends M3U8ParserSuite {
               it.contains(x)
             }
         } reduce { (a:Boolean, b:Boolean ) => a && b } should equal(true)
+
     }
+
 
   }
 
@@ -75,11 +73,10 @@ class StreamTransformerTest extends M3U8ParserSuite {
       _ + "\n" + _
     }
 
-    val streamPlaylist = data.toMasterPlaylist
 
     //When
-    val result = streamPlaylist map {
-      result => result.toMasterPlaylistString
+    val result = data.toMasterPlaylist map {
+      result => result toMasterPlaylistString
     }
 
     //Then
@@ -92,6 +89,7 @@ class StreamTransformerTest extends M3U8ParserSuite {
             }
         } reduce { (a:Boolean, b:Boolean ) => a && b } should equal(true)
     }
+
 
   }
 

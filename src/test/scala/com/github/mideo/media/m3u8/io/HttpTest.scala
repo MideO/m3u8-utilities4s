@@ -2,9 +2,9 @@ package com.github.mideo.media.m3u8.io
 
 import java.util
 
-import scala.collection.JavaConverters._
-import com.github.mideo.media.m3u8.M3U8ParserSuite
+import com.github.mideo.M3U8ParserSuite
 
+import scala.collection.JavaConverters._
 import com.github.tomakehurst.wiremock.WireMockServer
 import com.github.tomakehurst.wiremock.client.WireMock._
 

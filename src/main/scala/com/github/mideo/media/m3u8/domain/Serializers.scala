@@ -1,8 +1,10 @@
-package com.github.mideo.media.m3u8.parser
+package com.github.mideo.media.m3u8.domain
+
+import com.github.mideo.media.m3u8._
 
 import scala.collection.mutable
 
-private[parser] object Serializers {
+private[m3u8] object Serializers {
 
   private def reduce(playListPartsString: List[String]): String = {
     playListPartsString.reduce {

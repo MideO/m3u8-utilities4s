@@ -1,11 +1,12 @@
-package com.github.mideo.media.m3u8.parser
+package com.github.mideo.media.m3u8
 
 import java.io.InputStream
 
-import Deserializers._
-import Serializers._
-import ListOfMediaStreamPlaylistParts._
+import com.github.mideo.media.m3u8.domain.Deserializers._
+import com.github.mideo.media.m3u8.domain.Serializers._
 import com.github.mideo.media.m3u8.io.FileSystem
+import com.github.mideo.media.m3u8.domain.ListOfMediaStreamPlaylistParts._
+import com.github.mideo.media.m3u8.domain._
 
 import scala.concurrent.{ExecutionContext, Future}
 

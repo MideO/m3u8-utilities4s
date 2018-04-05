@@ -1,5 +1,6 @@
-package com.github.mideo.media.m3u8.parser
+package com.github.mideo.media.m3u8
 
+import com.github.mideo.media.m3u8.domain.StreamPlaylistSection
 import org.scalatest.{FunSuite, Matchers}
 
 class StreamPlaylistSectionTest extends FunSuite with Matchers {

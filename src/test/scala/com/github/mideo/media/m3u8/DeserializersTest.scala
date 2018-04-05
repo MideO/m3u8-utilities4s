@@ -1,8 +1,9 @@
-package com.github.mideo.media.m3u8.parser
+package com.github.mideo.media.m3u8
+
+import com.github.mideo.M3U8ParserSuite
+import com.github.mideo.media.m3u8.domain.Deserializers._
 
 import scala.io.Source
-import Deserializers._
-import com.github.mideo.media.m3u8.M3U8ParserSuite
 
 
 class DeserializersTest extends M3U8ParserSuite {

@@ -2,7 +2,7 @@ package com.github.mideo.media.m3u8.io
 
 import java.nio.file.{Files, Paths}
 
-import com.github.mideo.media.m3u8.M3U8ParserSuite
+import com.github.mideo.M3U8ParserSuite
 
 import scala.io.Source
 

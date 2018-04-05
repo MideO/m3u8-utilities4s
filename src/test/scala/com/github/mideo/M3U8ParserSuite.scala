@@ -1,7 +1,7 @@
-package com.github.mideo.media.m3u8
+package com.github.mideo
 
 import org.scalatest.mockito.MockitoSugar
-import org.scalatest.{AsyncFunSuite, FunSuite, Matchers}
+import org.scalatest.{AsyncFunSuite, Matchers}
 
 trait M3U8ParserSuite
   extends AsyncFunSuite

@@ -1,6 +1,8 @@
 
-import com.github.mideo.media.m3u8.M3U8ParserSuite
-import com.github.mideo.media.m3u8.parser._
+import com.github.mideo.M3U8ParserSuite
+import com.github.mideo.media.m3u8._
+import com.github.mideo.media.m3u8._
+import com.github.mideo.media.m3u8.domain._
 import org.scalatest.{Assertion, Failed, Outcome, Succeeded}
 
 import scala.io.Source

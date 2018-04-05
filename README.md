@@ -65,10 +65,10 @@ asset_3500k.m3u8
 #EXT-X-I-FRAME-STREAM-INF:BANDWIDTH=190000,CODECS="avc1.4d001f",RESOLUTION=960x540,URI="asset_2500k_I-Frame.m3u8"
 ```
 ```scala
-import com.github.mideo.media.m3u8.parser._
+import com.github.mideo.media.m3u8._
 
 import scala.io.Source
-import com.github.mideo.media.m3u8.parser._
+import com.github.mideo.media.m3u8._
 
 
 val is =   getClass.getClassLoader.getResource("master.m3u8").openStream()
