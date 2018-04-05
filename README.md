@@ -1,13 +1,9 @@
-# m3u8-parser - (wip)
-[![Build Status](https://travis-ci.org/MideO/m3u8-parser.svg?branch=master)](https://travis-ci.org/MideO/m3u8-parser)
+# m3u8-utilities4s - (wip)
+[![Build Status](https://travis-ci.org/MideO/m3u8-utilities4s.svg?branch=master)](https://travis-ci.org/MideO/m3u8-utilities4s)
 
 See [Apple HLS Guide](https://developer.apple.com/library/content/technotes/tn2288/_index.html)
 
-library to help:
- * De-serialising into a scala domain object
- * modify a master playlist and serialise from scala domain objects to playlist file
- * modify a vod playlist and serialise from scala domain objects to playlist file
- * modify a live playlist and serialise from scala domain objects to playlist file (wip)
+m3u8 utilities for scala
     
 ##### Docs?
   See Functional tests: [StreamPlaylistTest.scala](src/test/scala/StreamPlaylistTest.scala)

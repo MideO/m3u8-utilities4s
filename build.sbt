@@ -1,4 +1,4 @@
-name := "m3u8-parser"
+name := "m3u8-utilities4s"
 
 version := "0.1-SNAPSHOT"
 
