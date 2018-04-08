@@ -1,17 +1,15 @@
 package com.github.mideo.media.m3u8
 
-import java.io.InputStream
-
 import com.github.mideo.media.m3u8.domain.Deserializers._
-import com.github.mideo.media.m3u8.domain._
 import com.github.mideo.media.m3u8.domain.Serializers._
-import com.github.mideo.media.m3u8.io.FileSystem
+import com.github.mideo.media.m3u8.domain._
 
 import scala.concurrent.{ExecutionContext, Future}
+import scala.language.postfixOps
 
 object MasterStreamPlaylist {
 
-  private implicit class PimpedListOfMediaStreamPlaylistParts(s: List[MediaStreamPlaylistParts]) {
+  protected implicit class PimpedListOfMediaStreamPlaylistParts(s: List[MediaStreamPlaylistParts]) {
     def extractMediaStreamType: Option[MediaStreamType] = s collectFirst { case c if c.isInstanceOf[MediaStreamType] => c.asInstanceOf[MediaStreamType] }
 
     def extractMediaStreamIndependentSegments: Option[MediaStreamIndependentSegments] = s collectFirst { case c if c.isInstanceOf[MediaStreamIndependentSegments] => c.asInstanceOf[MediaStreamIndependentSegments] }
@@ -31,14 +29,7 @@ object MasterStreamPlaylist {
     } toMap
   }
 
-
   def apply(data: String = "")(implicit ec:ExecutionContext): Future[MasterStreamPlaylist] = data.toMasterPlaylist
-
-
-  def apply(data: InputStream)(implicit ec:ExecutionContext): Future[MasterStreamPlaylist] = FileSystem.read(data, (a: String, b: String) => a + "\n" + b) map {
-    _ toMasterPlaylist
-  } flatten
-
 
   def apply(mappings: List[MediaStreamPlaylistParts])(implicit ec:ExecutionContext): Future[MasterStreamPlaylist] = Future {
     MasterStreamPlaylist(

@@ -1,25 +1,16 @@
 package com.github.mideo.media.m3u8
 
-import java.io.InputStream
-
 import com.github.mideo.media.m3u8.domain.Deserializers._
-import com.github.mideo.media.m3u8.domain.Serializers._
 import com.github.mideo.media.m3u8.domain.ListOfMediaStreamPlaylistParts._
+import com.github.mideo.media.m3u8.domain.Serializers._
 import com.github.mideo.media.m3u8.domain._
 
-import scala.io.Source
+import scala.language.postfixOps
 
 
 object LiveStreamPlaylist {
   def apply(data: String): LiveStreamPlaylist = {
     data.toLiveStreamPlaylist
-  }
-
-  def apply(data: InputStream): LiveStreamPlaylist = {
-    Source.fromInputStream(data)
-      .getLines() reduce {
-      (a, b) => s"$a\n$b"
-    } toLiveStreamPlaylist
   }
 
   def apply(mappings: List[MediaStreamPlaylistParts]): LiveStreamPlaylist = {
