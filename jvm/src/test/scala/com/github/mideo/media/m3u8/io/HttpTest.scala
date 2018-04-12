@@ -7,18 +7,22 @@ import com.github.mideo.M3U8ParserSuite
 import scala.collection.JavaConverters._
 import com.github.tomakehurst.wiremock.WireMockServer
 import com.github.tomakehurst.wiremock.client.WireMock._
+import org.scalatest.BeforeAndAfterAll
 
 import scala.concurrent.Future
 
 
-class HttpTest extends M3U8ParserSuite {
+class HttpTest extends M3U8ParserSuite with BeforeAndAfterAll {
   val headers: util.Map[String, util.List[String]] = Map("header1" -> util.Arrays.asList("value1")).asJava
-
   val wireMockServer = new WireMockServer()
-  wireMockServer.start()
-  Runtime.getRuntime.addShutdownHook(new Thread {
-    override def run(): Unit = wireMockServer.shutdownServer()
-  })
+
+  override protected def beforeAll(): Unit = {
+    wireMockServer.start()
+  }
+
+  override protected def afterAll(): Unit = {
+    wireMockServer.shutdownServer()
+  }
 
   test("write with Post") {
     //Given
@@ -33,7 +37,7 @@ class HttpTest extends M3U8ParserSuite {
 
     //Then
     response map {
-      it:Http.Response =>
+      it: Http.Response =>
         wireMockServer.verify(postRequestedFor(urlEqualTo("/test"))
           .withHeader("header2", equalTo("value2"))
           .withRequestBody(equalTo("payload")))
@@ -42,7 +46,6 @@ class HttpTest extends M3U8ParserSuite {
         new String(it.content) should be("abcs")
 
     }
-
 
   }
 
@@ -58,17 +61,12 @@ class HttpTest extends M3U8ParserSuite {
 
     //Then
     response map {
-      it:Http.Response =>
+      it: Http.Response =>
         wireMockServer.verify(getRequestedFor(urlEqualTo("/test")))
         it.Headers.keySet should contain("header1")
         it.Headers("header1") should be("value1")
         new String(it.content) should be("abcs")
     }
 
-
-
-
   }
 }
-
-
