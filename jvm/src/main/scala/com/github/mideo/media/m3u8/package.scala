@@ -14,14 +14,14 @@ package object m3u8 {
   implicit class MasterStreamPlaylistExt(obj: MasterStreamPlaylist.type) {
     def apply(data: InputStream)(implicit ec: ExecutionContext): Future[MasterStreamPlaylist] = FileSystem.read(data, (a: String, b: String) => a + "\n" + b) map {
       _ toMasterPlaylist
-    } flatten
+    } flatMap identity
 
   }
 
   implicit class VodStreamPlaylistExt(obj: VodStreamPlaylist.type) {
     def apply(data: InputStream)(implicit ec: ExecutionContext): Future[VodStreamPlaylist] = FileSystem.read(data, (a: String, b: String) => s"$a\n$b") map {
       _ toVodStreamPlaylist
-    } flatten
+    } flatMap identity
   }
 
   implicit class LiveStreamPlaylistExt(obj: LiveStreamPlaylist.type) {

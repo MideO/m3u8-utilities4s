@@ -1,6 +1,5 @@
 lazy val commonSettings = Seq(
   name := "m3u8-utilities4s",
-  version := "0.1-SNAPSHOT",
   scalaVersion := "2.12.5",
   crossScalaVersions := Seq("2.11.12", "2.12.5"),
   scalacOptions ++= Seq(
