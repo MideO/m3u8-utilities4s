@@ -1,5 +1,12 @@
-# m3u8-utilities4s - (wip)
+# m3u8-utilities4s
 [![Build Status](https://travis-ci.org/MideO/m3u8-utilities4s.svg?branch=master)](https://travis-ci.org/MideO/m3u8-utilities4s)
+
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.github.mideo/m3u8-utilities4s_2.12/badge.svg)](http://search.maven.org/#search%7Cga%7C1%7Cg%3A%22com.github.mideo%22%20a%3A%22m3u8-utilities4s_2.12%22)
+
+#### Scala.js support 
+Thanks to [@bpholt](https://github.com/bpholt)   
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.github.mideo/m3u8-utilities4s_sjs0.6_2.12/badge.svg)](http://search.maven.org/#search%7Cga%7C1%7Cg%3A%22com.github.mideo%22%20a%3A%22m3u8-utilities4s_sjs0.6_2.12%22) 
+
 
 See [Apple HLS Guide](https://developer.apple.com/library/content/technotes/tn2288/_index.html)
 
